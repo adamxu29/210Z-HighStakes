@@ -1,5 +1,4 @@
 #include "main.h"
-#include "Configuration/Globals.hpp"
 
 using namespace Eclipse;
 
@@ -75,7 +74,13 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	bool tuning = true;
 	while(true){
-		driver.driver_control();
+		if(tuning){
+			tuner.driver_tuner();
+		}
+		else{
+			driver.driver_control();
+		}
 	}
 }

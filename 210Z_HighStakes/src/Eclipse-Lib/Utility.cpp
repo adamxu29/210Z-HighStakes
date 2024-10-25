@@ -33,7 +33,7 @@ void Utility::move_intake(int voltage)
 
 void Utility::move_wall_stake(int voltage)
 {
-    intake.at(0).move_voltage(voltage);
+    wall_stake.at(0).move_voltage(voltage);
 
     // use if multiple motors
 
@@ -54,7 +54,13 @@ void Utility::move_tilter()
 void Utility::move_doinker()
 {
     doinker_down = !doinker_down;
-    doinker.at(0).set_value(true);
+    doinker.at(0).set_value(doinker_down);
+}
+
+void Utility::move_intake_lift()
+{
+    intake_up = !intake_up;
+    intake_lift.at(0).set_value(intake_up);
 }
 
 // sensing

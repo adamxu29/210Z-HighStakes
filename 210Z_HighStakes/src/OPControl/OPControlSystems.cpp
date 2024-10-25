@@ -2,7 +2,6 @@
 
 using namespace Eclipse;
 
-bool tilter_tilting = false;
 
 void Eclipse::OPControl::drivetrain_control(){
     int32_t rightXjoystick = (controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
@@ -20,13 +19,15 @@ void Eclipse::OPControl::drivetrain_control(){
 }
 
 void Eclipse::OPControl::power_intake(int speed){ // speed in percent
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ util.move_intake(12000 * speed / 100); }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ util.move_intake(-12000 * speed / 100); }
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ util.move_intake(-12000 * speed / 100); }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ util.move_intake(12000 * speed / 100); }
     else{ util.move_intake(0); }
 }
 
-void Eclipse::OPControl::wall_stake(){
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){ util.move_tilter(); }
+void Eclipse::OPControl::wall_stake(int speed){
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){ util.move_wall_stake(-12000 * speed / 100); }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){ util.move_wall_stake(12000 * speed / 100); }
+    else{ util.move_wall_stake(0); }
 }
 
 void Eclipse::OPControl::activate_tilter(){
@@ -37,10 +38,15 @@ void Eclipse::OPControl::activate_doinker(){
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){ util.move_doinker(); }
 }
 
+void Eclipse::OPControl::lift_intake(){
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){ util.move_intake_lift(); }
+}
+
 void Eclipse::OPControl::driver_control(){
     driver.drivetrain_control();
     driver.power_intake(100);
-    driver.wall_stake();
+    driver.wall_stake(50);
     driver.activate_tilter();
     driver.activate_doinker();
+    driver.lift_intake();
 }

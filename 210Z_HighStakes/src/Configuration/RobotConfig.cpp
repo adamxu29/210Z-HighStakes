@@ -9,11 +9,12 @@ std::vector<pros::Motor> intake;
 std::vector<pros::Motor> wall_stake;
 std::vector<pros::ADIDigitalOut> tilter;
 std::vector<pros::ADIDigitalOut> doinker;
+std::vector<pros::ADIDigitalOut> intake_lift;
 std::vector<pros::IMU> imus;
 
 Eclipse::RobotConfig::RobotConfig(std::vector<int> left_ports, std::vector<int> right_ports, std::vector<int> intake_ports,
-                         std::vector<int> wall_stake_ports, std::vector<char> tilter_ports,
-                         std::vector<char> doinker_ports, std::vector<int> imu_ports)
+                         std::vector<int> wall_stake_ports, std::vector<char> tilter_ports, std::vector<char> doinker_ports,
+                         std::vector<char> intake_lift_ports,  std::vector<int> imu_ports)
 {
     for (auto i : left_ports)
     {
@@ -36,7 +37,7 @@ Eclipse::RobotConfig::RobotConfig(std::vector<int> left_ports, std::vector<int> 
     for (auto i : wall_stake_ports)
     {
         pros::Motor temp(abs(i), util.is_reversed(i));
-        intake.push_back(temp);
+        wall_stake.push_back(temp);
     }
 
     for (auto i : tilter_ports)

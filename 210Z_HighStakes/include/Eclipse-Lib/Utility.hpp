@@ -5,7 +5,7 @@ namespace Eclipse
     private:
         bool tilting = false;
         bool doinker_down = false;
-
+        bool intake_up = false;
     public:
         void move_left_drive(int voltage);
         void move_right_drive(int voltage);
@@ -13,6 +13,7 @@ namespace Eclipse
         void move_wall_stake(int voltage);
         void move_tilter();
         void move_doinker();
+        void move_intake_lift();
 
         double get_position();
         double get_heading();

@@ -5,17 +5,19 @@ using namespace Eclipse;
 Eclipse::RobotConfig RobotConfig(
 	{-6, 5, 4}, // Left motor ports
 
-	{-10, 9, 8}, // Right motor ports
+	{-10, -9, 8}, // Right motor ports
 
-	{4}, // intake ports
+	{12}, // intake ports
 
-	{15}, // wall stake ports
+	{3}, // wall stake ports
 
 	{'a'}, // tilter soleniod ports
 	
 	{'b'}, // doinker soleiond port
+
+	{'d'}, // intake lift soleniod port
 	
-	{3} // imu ports
+	{1, 2} // imu ports
 );
 
 
@@ -74,7 +76,7 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	bool tuning = true;
+	bool tuning = false;
 	while(true){
 		if(tuning){
 			tuner.driver_tuner();

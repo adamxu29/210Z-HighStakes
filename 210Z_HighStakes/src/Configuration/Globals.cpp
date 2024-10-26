@@ -6,6 +6,19 @@ using namespace Eclipse;
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
+pros::Motor_Group left_drive({-13, 5, 4});
+pros::Motor_Group right_drive({-10, -9, 16});
+
+pros::Motor intake(12);
+pros::Motor wall_stake(3);
+
+pros::ADIDigitalOut tilter('h');
+pros::ADIDigitalOut doinker('g');
+pros::ADIDigitalOut intake_lift('c');
+
+pros::IMU imu1(1);
+pros::IMU imu2(2);
+
 Utility util;
 OPControl driver;
 PID_Tuner tuner;

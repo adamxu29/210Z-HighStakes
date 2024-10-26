@@ -2,10 +2,6 @@ namespace Eclipse
 {
     class Utility
     {
-    private:
-        bool tilting = false;
-        bool doinker_down = false;
-        bool intake_up = false;
     public:
         void move_left_drive(int voltage);
         void move_right_drive(int voltage);

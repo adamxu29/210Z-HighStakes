@@ -2,23 +2,24 @@
 
 using namespace Eclipse;
 
-Eclipse::RobotConfig RobotConfig(
-	{-6, 5, 4}, // Left motor ports
 
-	{-10, -9, 8}, // Right motor ports
+// Eclipse::RobotConfig RobotConfig(
+// 	{-6, 5, 4}, // Left motor ports
 
-	{12}, // intake ports
+// 	{-10, -9, 8}, // Right motor ports
 
-	{3}, // wall stake ports
+// 	{12}, // intake ports
 
-	{'a'}, // tilter soleniod ports
+// 	{3}, // wall stake ports
+
+// 	{'a'}, // tilter soleniod ports
 	
-	{'b'}, // doinker soleiond port
+// 	{'b'}, // doinker soleiond port
 
-	{'d'}, // intake lift soleniod port
+// 	{'d'}, // intake lift soleniod port
 	
-	{1, 2} // imu ports
-);
+// 	{1, 2} // imu ports
+// );
 
 
 /**
@@ -28,7 +29,8 @@ Eclipse::RobotConfig RobotConfig(
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-
+	imu1.tare();
+	imu2.tare();
 }
 
 /**
@@ -60,7 +62,23 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous(){
+	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	t_pid.set_drive_constants(2.75, 1.1, 600);
+
+	//only one auto for nnow
+
+	t_pid.set_t_constants(5, 0, 35, 600);
+    t_pid.translation_pid(24, 75, 3);
+
+	// r_pid.set_r_constants(7, 0, 45);
+	// r_pid.rotation_pid(90, 90, 2);
+
+	// t_pid.set_t_constants(5, 0, 35, 600);
+    // t_pid.translation_pid(-13.5, 90, 3);
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -84,5 +102,7 @@ void opcontrol() {
 		else{
 			driver.driver_control();
 		}
+		pros::delay(10);
+
 	}
 }

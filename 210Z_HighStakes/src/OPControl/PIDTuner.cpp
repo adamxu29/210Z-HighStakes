@@ -18,11 +18,13 @@ void Eclipse::PID_Tuner::change_constant(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
         if(tuner.current_constant < 2){
             tuner.current_constant++;
+            tuner.print_constants();
         }
     }
     else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
         if(tuner.current_constant > 0){
             tuner.current_constant--;
+            tuner.print_constants();
         }
     }
 }
@@ -31,11 +33,13 @@ void Eclipse::PID_Tuner::change_movement(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         if(tuner.current_movement < 2){
             tuner.current_movement++;
+            tuner.print_constants();
         }
     }
-    else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+    else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
         if(tuner.current_movement > 0){
             tuner.current_movement--;
+            tuner.print_constants();
         }
     }
 }

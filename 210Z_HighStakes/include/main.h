@@ -72,11 +72,12 @@ void opcontrol(void);
 #endif
 
 #ifdef __cplusplus
-// auto
-#include "Eclipse-Lib/Chassis/PID.hpp"
+// autonomous
+#include "Lib-Eclipse/Chassis/Chassis_PID.hpp"
+#include "Autonomous/Autonomous-Paths.hpp"
 
 // misc
-#include "Eclipse-Lib/Utility.hpp"
+#include "Lib-Eclipse/Utility.hpp"
 
 // driver
 #include "OPControl/OPControlSystems.hpp"
@@ -85,6 +86,7 @@ void opcontrol(void);
 // configuration
 #include "Configuration/Globals.hpp"
 #include "Configuration/RobotConfig.hpp"
+
 
 /**
  * You can add C++-only headers here

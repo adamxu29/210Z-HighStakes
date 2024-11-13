@@ -71,6 +71,14 @@ double Utility::get_position()
     double left_position = left_drive.get_positions()[1];
     double right_position = right_drive.get_positions()[1];
 
+    // std::cout << "left" << left_position << " right" << right_position << std::endl;
+    
+    return (left_position + right_position) / 2;
+}
+
+double Utility::get_wall_stake_position(){
+    double left_position = wall_stake.get_positions()[0];
+    double right_position = wall_stake.get_positions()[1];
     
     return (left_position + right_position) / 2;
 }
@@ -118,7 +126,7 @@ double Eclipse::Utility::get_min_angle(float angle1, float angle2)
 {
     angle1 = fmod(angle1, 360);
     angle2 = fmod(angle2, 360);
-    float error = angle1 - angle2;
+    float error = angle2 - angle1;
     if (error > 180)
         error -= 360;
     else if (error < -180)

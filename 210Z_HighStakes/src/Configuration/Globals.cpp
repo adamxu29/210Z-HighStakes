@@ -10,7 +10,11 @@ pros::Motor_Group left_drive({-13, 5, 4});
 pros::Motor_Group right_drive({-10, -9, 16});
 
 pros::Motor intake(12);
-pros::Motor wall_stake(3);
+
+// pros::Motor left_wall_stake(17);
+// pros::Motor right_wall_stake(-6);
+pros::Motor_Group wall_stake({-17, 6});
+
 
 pros::ADIDigitalOut tilter('h');
 pros::ADIDigitalOut doinker('g');

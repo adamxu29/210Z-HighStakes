@@ -75,19 +75,35 @@ void Eclipse::PID_Tuner::update_constants(){
     }
 }
 
+void Eclipse::PID_Tuner::set_brake_coast(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+        left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+	    right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+        std::cout << "brake mode set to coast" << std::endl;
+    }
+}
+
+void Eclipse::PID_Tuner::set_brake_hold(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+        left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	    right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+        std::cout << "brake mode set to hold" << std::endl;
+    }
+}
+
 void Eclipse::PID_Tuner::move(){
     if(tuner.current_movement == 0){
         if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
             t_pid.set_t_constants(tuner.kp, tuner.ki, tuner.kd, 600);
-            t_pid.translation_pid(24, 90, 2);
+            t_pid.translation_pid(24, 75, 2);
         }
         else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
             t_pid.set_t_constants(tuner.kp, tuner.ki, tuner.kd, 600);
-            t_pid.translation_pid(48, 90, 2);
+            t_pid.translation_pid(-24, 90, 2);
         }
         else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
             t_pid.set_t_constants(tuner.kp, tuner.ki, tuner.kd, 600);
-            t_pid.translation_pid(-24, 90, 2);
+            t_pid.translation_pid(48, 90, 2);
         }
         else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
             t_pid.set_t_constants(tuner.kp, tuner.ki, tuner.kd, 600);
@@ -136,5 +152,7 @@ void Eclipse::PID_Tuner::driver_tuner(){
     tuner.change_constant();
     tuner.change_movement();
     tuner.update_constants();
+    tuner.set_brake_coast();
+    tuner.set_brake_hold();
     tuner.move();
 }

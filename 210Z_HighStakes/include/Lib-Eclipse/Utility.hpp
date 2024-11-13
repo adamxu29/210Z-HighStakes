@@ -12,6 +12,7 @@ namespace Eclipse
         void move_intake_lift();
 
         double get_position();
+        double get_wall_stake_position();
         double get_heading();
         void reset_position();
 

@@ -3,7 +3,9 @@ namespace Eclipse{
         public:
             void drivetrain_control();
             void power_intake(int speed);
-            void power_wall_stake();
+            void power_wall_stake(); // match
+            void manual_wall_stake(int speed); // skills
+            void prime_wall_stake(); // skills
             bool prime;
             void activate_tilter();
             void activate_doinker();

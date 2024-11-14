@@ -38,21 +38,18 @@ void Eclipse::Curve_PID::set_c_constants(const double kp, const double ki, const
 
 Eclipse::Translation_PID::Translation_PID()
 {
-    // tune later
     t_pid.t_tolerance = 5;
     t_pid.t_error_threshold = 100;
 }
 
 Eclipse::Rotation_PID::Rotation_PID()
 {
-    // tune later
     r_pid.r_tolerance = 4;
     r_pid.r_error_threshold = 3;
 }
 
 Eclipse::Curve_PID::Curve_PID()
 {
-    // tune later
     c_pid.c_tolerance = 5;
     c_pid.c_error_threshold = 7;
 }

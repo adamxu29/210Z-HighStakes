@@ -12,6 +12,9 @@ extern pros::Motor_Group wall_stake;
 extern pros::ADIDigitalOut tilter;
 extern pros::ADIDigitalOut doinker;
 extern pros::ADIDigitalOut intake_lift;
+extern pros::ADIDigitalOut rachet;
+
+extern pros::ADIAnalogIn line;
 
 extern pros::IMU imu1;
 extern pros::IMU imu2;

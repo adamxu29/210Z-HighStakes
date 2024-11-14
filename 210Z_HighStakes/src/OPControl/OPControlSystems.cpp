@@ -1,6 +1,5 @@
-bool prime = false;
 int score_position = 2300;
-int prime_position = 700;
+int prime_position = 740;
 int color_sort_position = 650;
 int down_position = 50;
 int start_time = 0;
@@ -63,46 +62,60 @@ void Eclipse::OPControl::lift_intake(){
     }
 }
 
+int base_lighting = 2800;
+int prime_lighting = 2400; // base: 2900
+bool primed = false;
+bool scoring = false;
+bool reset = true;
 
-void Eclipse::OPControl::power_wall_stake(){
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-        prime = false;
-        wall_stake.move_voltage(12000);
-    }
-    else{
-        wall_stake.move_velocity(0);
-    }
-
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){ 
-        start_time = pros::millis();
-        if (!prime){
-            prime =! prime;
-            while (util.get_wall_stake_position() < (prime_position - 10) || util.get_wall_stake_position() > (prime_position + 10)) {    // failsafe
-                if((pros::millis() - start_time) > 1500){
-                    break;
-                }
-                wall_stake.move_absolute(prime_position, 150);
-            }
+void Eclipse::OPControl::prime_wall_stake(){
+    if((line.get_value() > base_lighting) && (scoring == false) && (reset == false)){
+        if(util.get_wall_stake_position() > prime_position){
+            wall_stake.move_voltage(-3000);
         }
-        else if(prime){
-            prime = !prime;
-            while (util.get_wall_stake_position() > (down_position + 10)) {
-                if((pros::millis() - start_time) > 1500){
-                    break;
-                }    // failsafe
-                wall_stake.move_absolute(down_position + 5, 200);
-            }
-        } 
-        else{
-            wall_stake.move_velocity(0);
+        else if(util.get_wall_stake_position() < prime_position){
+            wall_stake.move_voltage(3000);
         }
+    }
+    else if((line.get_value() < prime_lighting + 50) && (reset == false)){
+        primed = true;
+        wall_stake.move_voltage(0);
+        pros::delay(50);
+        wall_stake.move_absolute(760, 200);
+    }
+    else if(reset == true){
+        primed = false;
+        wall_stake.move_absolute(0, 100);
     }
 }
+
+bool motor_hold = true;
+
+void Eclipse::OPControl::power_wall_stake(){
+    if((controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))){
+        scoring = true;
+        if(scoring){
+            wall_stake.move_voltage(12000);
+        }
+        primed = false;
+        reset = false;
+    }
+    else{
+        scoring = false;
+    }
+
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+        reset = !reset;
+    }
+
+}
+
 
 void Eclipse::OPControl::driver_control(){
     driver.drivetrain_control();
     driver.power_intake(100);
     // driver.manual_wall_stake(100);
+    driver.prime_wall_stake();
     driver.power_wall_stake();
     driver.activate_tilter();
     driver.activate_doinker();

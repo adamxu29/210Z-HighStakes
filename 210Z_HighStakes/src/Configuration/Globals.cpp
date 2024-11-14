@@ -18,7 +18,10 @@ pros::Motor_Group wall_stake({-17, 6});
 
 pros::ADIDigitalOut tilter('h');
 pros::ADIDigitalOut doinker('g');
-pros::ADIDigitalOut intake_lift('c');
+pros::ADIDigitalOut intake_lift('e');
+pros::ADIDigitalOut rachet('a'); // temp
+
+pros::ADIAnalogIn line('f');
 
 pros::IMU imu1(1);
 pros::IMU imu2(2);

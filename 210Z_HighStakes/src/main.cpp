@@ -23,6 +23,11 @@ using namespace Eclipse;
 void initialize() {
 	imu1.tare_rotation();
 	imu2.tare_rotation();
+	line.calibrate();
+	std::cout << "calibrated value: " << line.get_value_calibrated() << std::endl;
+	wall_stake.set_zero_position(0);
+
+	// pros::delay(3000);
 }
 
 // could potentially be used for auto hang after match ends, test it out
@@ -63,6 +68,7 @@ void opcontrol() {
 		drivetrain_temperature = (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
 		controller.print(0, 0, "DT: %0.1f", drivetrain_temperature);
 		// controller.print(0, 0, "Heading: %0.1f", util.get_heading());
+		// controller.print(0, 0, "Line: %04d", line.get_value());
 		if(tuning){
 			tuner.driver_tuner();
 		}

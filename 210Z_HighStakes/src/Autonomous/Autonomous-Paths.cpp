@@ -5,7 +5,72 @@ using namespace Eclipse;
 // ITEGRATE ALLIANCE STAKES ONCE BUILT
 
 void Eclipse::Autonomous_Paths::solo_awp(){
+	wall_stake.move_absolute(760, 200);
+	clamp.set_value(true);
 
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(25, 90, 2);
+
+	intake.move_voltage(-12000);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(-21, 40, 2);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(2, 90, 2);
+
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-90, 90, 2);
+
+	intake.move_voltage(0);
+	wall_stake.move_absolute(1000, 200);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(-15, 30, 2);
+
+	wall_stake.move_absolute(0, 200);
+	pros::delay(750);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(5, 90, 2);
+
+	clamp.set_value(false);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-135, 90, 2);
+
+	intake_lift.set_value(true);
+	pros::delay(100);
+	intake.move_voltage(-12000);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(8, 90, 2);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-217, 90, 2);
+
+	intake_lift.set_value(false);
+	intake.move_voltage(0);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(-39, 90, 2);
+
+	clamp.set_value(true);
+	pros::delay(100);
+	intake.move_voltage(-12000);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(5, 90, 2);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(20, 90, 2);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(20, 90, 2);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(-35, 90, 2);
 }
 
 void Eclipse::Autonomous_Paths::red_left(){
@@ -16,7 +81,7 @@ void Eclipse::Autonomous_Paths::red_left(){
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(-40, 50, 2);
 
-	tilter.set_value(true);
+	clamp.set_value(true);
 	intake.move_voltage(-12000);
 
     // intake and score second ring
@@ -55,7 +120,7 @@ void Eclipse::Autonomous_Paths::red_right(){
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(-40, 50, 2);
 
-	tilter.set_value(true);
+	clamp.set_value(true);
 	pros::delay(250);
 	intake.move_voltage(-12000);
 
@@ -75,7 +140,7 @@ void Eclipse::Autonomous_Paths::red_right(){
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(-35, 75, 2);
 
-	tilter.set_value(false);
+	clamp.set_value(false);
 
     // grab fifth goal
 	r_pid.set_r_constants(2.5, 0, 15);
@@ -110,7 +175,7 @@ void Eclipse::Autonomous_Paths::blue_left(){
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(-40, 50, 2);
 
-	tilter.set_value(true);
+	clamp.set_value(true);
 	pros::delay(250);
 	intake.move_voltage(-12000);
 
@@ -130,7 +195,7 @@ void Eclipse::Autonomous_Paths::blue_left(){
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(-35, 75, 2);
 
-	tilter.set_value(false);
+	clamp.set_value(false);
 
     // grab fifth goal
 	r_pid.set_r_constants(2.5, 0, 15);
@@ -165,7 +230,7 @@ void Eclipse::Autonomous_Paths::blue_right(){
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(-40, 50, 2);
 
-	tilter.set_value(true);
+	clamp.set_value(true);
 	intake.move_voltage(-12000);
 
     // intake and score second ring
@@ -192,8 +257,28 @@ void Eclipse::Autonomous_Paths::blue_right(){
 
 	t_pid.set_t_constants(5, 0, 15, 600);
 	t_pid.translation_pid(10, 50, 2);
+	
 }
 
 void Eclipse::Autonomous_Paths::skills(){
+	wall_stake.move_absolute(760, 200);
+	pros::delay(500);
+	clamp.set_value(true);
+
+	intake.move_voltage(-12000);
+
+	pros::delay(1000);
+
+	intake.move_voltage(0);
+	wall_stake.move_absolute(1000, 200);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(-15, 30, 2);
+
+	wall_stake.move_absolute(0, 200);
+	pros::delay(750);
+
+	t_pid.set_t_constants(5, 0, 15, 600);
+	t_pid.translation_pid(5, 90, 2);
 
 }

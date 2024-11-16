@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "210Z_HighStakes",
+    "project_name": "210Z_Solo_AWP",
     "target": "v5",
     "templates": {
       "kernel": {

@@ -9,7 +9,7 @@ extern pros::Motor_Group right_drive;
 extern pros::Motor intake;
 extern pros::Motor_Group wall_stake;
 
-extern pros::ADIDigitalOut tilter;
+extern pros::ADIDigitalOut clamp;
 extern pros::ADIDigitalOut doinker;
 extern pros::ADIDigitalOut intake_lift;
 extern pros::ADIDigitalOut rachet;
@@ -25,10 +25,13 @@ extern Eclipse::PID_Tuner tuner;
 extern Eclipse::Translation_PID t_pid;
 extern Eclipse::Rotation_PID r_pid;
 extern Eclipse::Curve_PID c_pid;
+extern Eclipse::Autonomous_Paths auton;
 
 extern double maxSpeed;
 extern double turn_maxSpeed;
 extern double curve_maxSpeed;
+
+extern bool skills;
 // PID functions
 extern void drive_pid(double target);
 extern void turn_pid(double theta);

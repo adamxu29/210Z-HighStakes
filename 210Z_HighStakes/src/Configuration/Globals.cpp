@@ -16,7 +16,7 @@ pros::Motor intake(12);
 pros::Motor_Group wall_stake({-17, 6});
 
 
-pros::ADIDigitalOut tilter('h');
+pros::ADIDigitalOut clamp('h');
 pros::ADIDigitalOut doinker('g');
 pros::ADIDigitalOut intake_lift('e');
 pros::ADIDigitalOut rachet('a'); // temp
@@ -32,3 +32,4 @@ PID_Tuner tuner;
 Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
+Autonomous_Paths auton;

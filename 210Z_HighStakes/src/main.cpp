@@ -42,7 +42,9 @@ void autonomous(){
 	
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 
+	auton.skills();
 }
 
 /**
@@ -66,8 +68,8 @@ void opcontrol() {
 	float drivetrain_temperature;
 	while(true){
 		drivetrain_temperature = (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
-		controller.print(0, 0, "DT: %0.1f", drivetrain_temperature);
-		// controller.print(0, 0, "Heading: %0.1f", util.get_heading());
+		// controller.print(0, 0, "DT: %0.1f", drivetrain_temperature);
+		controller.print(0, 0, "Heading: %0.1f", util.get_heading());
 		// controller.print(0, 0, "Line: %04d", line.get_value());
 		if(tuning){
 			tuner.driver_tuner();
@@ -76,7 +78,13 @@ void opcontrol() {
 			wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 			// std::cout << "left pos: " << left_drive.get_positions()[0] << ", " << left_drive.get_positions()[1] << ", " << left_drive.get_positions()[2] << std::endl;
 			// std::cout << "right pos: " << right_drive.get_positions()[0] << ", " << right_drive.get_positions()[1] << ", " << right_drive.get_positions()[2] << std::endl;
-			driver.driver_control();
+			if(!skills){
+				driver.driver_control();
+			}
+			else{
+				driver.skills_control();
+			}
+			
 		}
 		pros::delay(10);
 	}

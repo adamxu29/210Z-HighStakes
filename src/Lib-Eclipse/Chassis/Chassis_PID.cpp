@@ -44,7 +44,7 @@ Eclipse::Translation_PID::Translation_PID()
 
 Eclipse::Rotation_PID::Rotation_PID()
 {
-    r_pid.r_tolerance = 3;
+    r_pid.r_tolerance = 4;
     r_pid.r_error_threshold = 3;
 }
 
@@ -173,9 +173,9 @@ void Eclipse::Translation_PID::translation_pid(double target, double max_speed, 
         double voltage = t_pid.compute_t(current_position, target);
         double heading_correction = util.get_min_angle(util.get_heading(), theta) * t_pid.t_heading_kp;
 
-        // std::cout << "average pos" << current_position << std::endl;
-        // std::cout << "output" << voltage << std::endl;
-        // std::cout << "error" << target - current_position << std::endl;
+        std::cout << "average pos" << current_position << std::endl;
+        std::cout << "output" << voltage << std::endl;
+        std::cout << "error" << target - current_position << std::endl;
 
         left_drive.move_voltage((voltage * (12000.0 / 127.0)) + heading_correction);
         right_drive.move_voltage((voltage * (12000.0 / 127.0)) - heading_correction);

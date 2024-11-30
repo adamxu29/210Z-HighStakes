@@ -30,6 +30,8 @@ void initialize() {
 	chassis.calibrate();
 	std::cout << "calibrated value: " << line.get_value_calibrated() << std::endl;
 	wall_stake.set_zero_position(0);
+	left_drive.set_zero_position(0);
+    right_drive.set_zero_position(0);
 
 	//pros::delay(3000);
 }
@@ -47,6 +49,8 @@ void autonomous(){
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	left_drive.set_zero_position(0);
+    right_drive.set_zero_position(0);
 
 	// auton.red_awp_rush(); //1
 	// auton.blue_awp_rush(); //2
@@ -88,12 +92,11 @@ void opcontrol() {
 		}
 		else{
 			wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-			// std::cout << "pos: " << util.get_wall_stake_position() << std::endl;
+			// std::cout << "pos: " << left_drive.get_positions()[0] << std::endl;
 			// std::cout << "left pos: " << left_drive.get_positions()[0] << ", " << left_drive.get_positions()[1] << ", " << left_drive.get_positions()[2] << std::endl;
 			// std::cout << "right pos: " << right_drive.get_positions()[0] << ", " << right_drive.get_positions()[1] << ", " << right_drive.get_positions()[2] << std::endl;
 			driver.driver_control();
-			// driver.skills_control();
 		}
-		pros::delay(8);
+		pros::delay(100);
 	}
 }

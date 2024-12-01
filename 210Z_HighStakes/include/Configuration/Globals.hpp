@@ -1,4 +1,6 @@
+#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
+#include "lemlib/api.hpp" // IWYU pragma: keep
 
 // controller
 extern pros::Controller controller;
@@ -12,7 +14,7 @@ extern pros::Motor_Group wall_stake;
 extern pros::ADIDigitalOut clamp;
 extern pros::ADIDigitalOut doinker;
 extern pros::ADIDigitalOut intake_lift;
-extern pros::ADIDigitalOut rachet;
+extern pros::ADIDigitalOut ratchet;
 
 extern pros::ADIAnalogIn line;
 
@@ -27,12 +29,6 @@ extern Eclipse::Rotation_PID r_pid;
 extern Eclipse::Curve_PID c_pid;
 extern Eclipse::Autonomous_Paths auton;
 
-extern double maxSpeed;
-extern double turn_maxSpeed;
-extern double curve_maxSpeed;
-
 extern bool skills;
-// PID functions
-extern void drive_pid(double target);
-extern void turn_pid(double theta);
-extern void curve_pid(double theta, double timeout, double curve_damper, bool backwards);
+
+extern lemlib::Chassis chassis;

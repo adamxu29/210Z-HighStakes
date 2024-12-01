@@ -1,9 +1,32 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "210Z_Solo_AWP",
+    "project_name": "red_elims",
     "target": "v5",
     "templates": {
+      "LemLib": {
+        "location": "C:\\Users\\15874\\AppData\\Roaming\\PROS\\templates\\LemLib@0.4.8",
+        "metadata": {
+          "origin": "LemLib"
+        },
+        "name": "LemLib",
+        "py/object": "pros.conductor.templates.local_template.LocalTemplate",
+        "supported_kernels": "^3.8.2",
+        "system_files": [
+          "include/lemlib/logger.hpp",
+          "include/lemlib/chassis/odom.hpp",
+          "firmware/LemLib.a",
+          "include/lemlib/util.hpp",
+          "include/lemlib/pid.hpp",
+          "include/lemlib/pose.hpp",
+          "include/lemlib/chassis/trackingWheel.hpp",
+          "include/lemlib/chassis/chassis.hpp",
+          "include/lemlib/api.hpp"
+        ],
+        "target": "v5",
+        "user_files": [],
+        "version": "0.4.8"
+      },
       "kernel": {
         "location": "C:\\Users\\Adam\\AppData\\Roaming\\PROS\\templates\\kernel@3.8.2",
         "metadata": {
@@ -309,7 +332,7 @@
       }
     },
     "upload_options": {
-      "slot": 1
+      "slot": 4
     },
     "use_early_access": false
   }

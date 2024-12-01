@@ -1,5 +1,6 @@
 /**
  * \file main.h
+ * 
  *
  * Contains common definitions and header files used throughout your PROS
  * project.
@@ -86,6 +87,7 @@ void opcontrol(void);
 // configuration
 #include "Configuration/Globals.hpp"
 #include "Configuration/RobotConfig.hpp"
+#include "lemlib/api.hpp" // IWYU pragma: keep
 
 
 /**

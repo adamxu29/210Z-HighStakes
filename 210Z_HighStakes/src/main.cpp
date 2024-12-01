@@ -1,4 +1,7 @@
+#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
+#include "lemlib/api.hpp" // IWYU pragma: keep
+
 
 using namespace Eclipse;
 
@@ -24,10 +27,13 @@ void initialize() {
 	imu1.tare_rotation();
 	imu2.tare_rotation();
 	line.calibrate();
+	chassis.calibrate();
 	std::cout << "calibrated value: " << line.get_value_calibrated() << std::endl;
 	wall_stake.set_zero_position(0);
+	left_drive.set_zero_position(0);
+    right_drive.set_zero_position(0);
 
-	// pros::delay(3000);
+	//pros::delay(3000);
 }
 
 // could potentially be used for auto hang after match ends, test it out
@@ -43,8 +49,13 @@ void autonomous(){
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	left_drive.set_zero_position(0);
+    right_drive.set_zero_position(0);
 
-	auton.skills();
+	auton.red_awp_rush(); //1
+	// auton.blue_awp_rush(); //2
+	// auton.test(); //3
+	auton.skills(); //8
 }
 
 /**
@@ -62,30 +73,30 @@ void autonomous(){
  */
 
 void opcontrol() {
+	//wall_stake.set_zero_position(0);
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 	float drivetrain_temperature;
+
+	skills = false; // make true if running skills
+
 	while(true){
 		drivetrain_temperature = (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
-		// controller.print(0, 0, "DT: %0.1f", drivetrain_temperature);
-		controller.print(0, 0, "Heading: %0.1f", util.get_heading());
+		controller.print(0, 0, "DT: %0.1f", drivetrain_temperature);
+		// controller.print(0, 0, "Heading: %0.1f", util.get_heading());
 		// controller.print(0, 0, "Line: %04d", line.get_value());
 		if(tuning){
 			tuner.driver_tuner();
 		}
 		else{
 			wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+			// std::cout << "pos: " << left_drive.get_positions()[0] << std::endl;
 			// std::cout << "left pos: " << left_drive.get_positions()[0] << ", " << left_drive.get_positions()[1] << ", " << left_drive.get_positions()[2] << std::endl;
 			// std::cout << "right pos: " << right_drive.get_positions()[0] << ", " << right_drive.get_positions()[1] << ", " << right_drive.get_positions()[2] << std::endl;
-			if(!skills){
-				driver.driver_control();
-			}
-			else{
-				driver.skills_control();
-			}
-			
+			driver.driver_control();
 		}
-		pros::delay(10);
+		pros::delay(8);
 	}
 }

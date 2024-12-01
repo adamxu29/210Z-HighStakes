@@ -11,15 +11,13 @@ pros::Motor_Group right_drive({-10, -9, 16});
 
 pros::Motor intake(12);
 
-// pros::Motor left_wall_stake(17);
-// pros::Motor right_wall_stake(-6);
-pros::Motor_Group wall_stake({-17, 6});
+pros::Motor_Group wall_stake({17, -6});
 
 
 pros::ADIDigitalOut clamp('h');
 pros::ADIDigitalOut doinker('g');
 pros::ADIDigitalOut intake_lift('e');
-pros::ADIDigitalOut rachet('a'); // temp
+pros::ADIDigitalOut ratchet('a'); // temp
 
 pros::ADIAnalogIn line('f');
 
@@ -33,3 +31,41 @@ Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
 Autonomous_Paths auton;
+
+lemlib::Drivetrain_t drivetrain {
+    &left_drive, // left drivetrain motors
+    &right_drive, // right drivetrain motors
+    9.5, // track width in inches
+    3.75, // wheel diameter
+    480 // wheel rpm
+};
+
+lemlib::OdomSensors_t sensors {
+    nullptr, // vertical tracking wheel 1 (motor)
+    nullptr, // vertical tracking wheel 2 (motor)
+    nullptr, // horizontal tracking wheel 1 (none)
+    nullptr, // we don't have a second tracking wheel, so we set it to nullptr
+    &imu1, // inertial sensor
+};
+
+lemlib::ChassisController_t lateralController {
+    8, // kP
+    30, // kD
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    5 // slew rate
+};
+
+lemlib::ChassisController_t angularController {
+    4, // kP <- default: 4
+    40, // kD <- default: 40
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    750, // largeErrorTimeout <- 500
+    0 // slew rate
+};
+
+lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);

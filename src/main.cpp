@@ -37,9 +37,13 @@ void initialize() {
 }
 
 // could potentially be used for auto hang after match ends, test it out
-void disabled() {}
+void disabled() {
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+}
 
-void competition_initialize() {}
+void competition_initialize() {
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+}
 
 void autonomous(){
 	t_pid.set_drive_constants(2.75, 0.8, 600);
@@ -54,8 +58,12 @@ void autonomous(){
 
 	// auton.red_awp_rush(); //1
 	// auton.blue_awp_rush(); //2
-	// auton.test();
-	auton.skills(); //8
+	auton.red_elims(); //3
+	// auton.blue_elims(); //4
+
+	// auton.skills(); //8
+
+	// auton.test(); //7
 }
 
 /**
@@ -97,6 +105,6 @@ void opcontrol() {
 			// std::cout << "right pos: " << right_drive.get_positions()[0] << ", " << right_drive.get_positions()[1] << ", " << right_drive.get_positions()[2] << std::endl;
 			driver.driver_control();
 		}
-		pros::delay(100);
+		pros::delay(8);
 	}
 }

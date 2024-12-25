@@ -1,6 +1,7 @@
 namespace Eclipse{
     class OPControl{
         public:
+            void exponential_curve_accelerator();
             void drivetrain_control();
             void power_intake(int speed);
             void prime_wall_stake();

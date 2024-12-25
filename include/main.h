@@ -78,6 +78,9 @@ void opcontrol(void);
 #include "Autonomous/Autonomous-Paths.hpp"
 
 // misc
+#include "display/lv_objx/lv_label.h"
+#include "vector"
+#include "Lib-Eclipse/GUI.hpp"
 #include "Lib-Eclipse/Utility.hpp"
 
 // driver

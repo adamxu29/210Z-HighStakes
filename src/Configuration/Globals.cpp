@@ -31,6 +31,7 @@ Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
 Autonomous_Paths auton;
+GUI gui;
 
 lemlib::Drivetrain_t drivetrain {
     &left_drive, // left drivetrain motors

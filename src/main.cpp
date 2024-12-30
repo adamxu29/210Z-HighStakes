@@ -24,11 +24,15 @@ using namespace Eclipse;
 // );
 
 void initialize() {
+	gui.initialize_styles();
+	gui.initialize_objects();
+
+	gui.display_home();
+
 	imu1.tare_rotation();
 	imu2.tare_rotation();
 	line.calibrate();
 	chassis.calibrate();
-	std::cout << "calibrated value: " << line.get_value_calibrated() << std::endl;
 	wall_stake.set_zero_position(0);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);

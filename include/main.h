@@ -77,10 +77,13 @@ void opcontrol(void);
 #include "Lib-Eclipse/Chassis/Chassis_PID.hpp"
 #include "Autonomous/Autonomous-Paths.hpp"
 
-// misc
+// gui
 #include "display/lv_objx/lv_label.h"
 #include "vector"
+#include "pros/apix.h"
 #include "Lib-Eclipse/GUI.hpp"
+
+// misc
 #include "Lib-Eclipse/Utility.hpp"
 
 // driver

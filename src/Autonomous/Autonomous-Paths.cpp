@@ -2,6 +2,7 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "pros/motors.h"
+#include "map"
 
 /*
 Odometry coord finder: //https://path.jerryio.com/

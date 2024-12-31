@@ -28,6 +28,8 @@ extern Eclipse::Translation_PID t_pid;
 extern Eclipse::Rotation_PID r_pid;
 extern Eclipse::Curve_PID c_pid;
 extern Eclipse::Autonomous_Paths auton;
+extern Eclipse::Autonomous_Paths::Red red;
+extern Eclipse::Autonomous_Paths::Blue blue;
 extern Eclipse::GUI gui;
 
 extern bool skills;

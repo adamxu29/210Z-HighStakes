@@ -10,8 +10,12 @@ Odometry coord finder: //https://path.jerryio.com/
 
 using namespace Eclipse;
 
-void Eclipse::Autonomous_Paths::red_awp_rush()
-{
+// Red paths
+void Eclipse::Autonomous_Paths::Red::solo_awp(){
+
+}
+
+void Eclipse::Autonomous_Paths::Red::left_half_awp(){
 	clamp.set_value(true);
 	intake_lift.set_value(true); // raise the intake
 	chassis.setPose(0, 0, 0);
@@ -95,8 +99,11 @@ void Eclipse::Autonomous_Paths::red_awp_rush()
 	wall_stake.move_voltage(0);
 }
 
-void Eclipse::Autonomous_Paths::red_elims()
-{
+void Eclipse::Autonomous_Paths::Red::right_half_awp(){
+	
+}
+
+void Eclipse::Autonomous_Paths::Red::goal_side_rush(){
 	r_pid.set_r_constants(2.5, 0, 15);
 	r_pid.rotation_pid(21.5, 90, .55);
 
@@ -165,8 +172,16 @@ void Eclipse::Autonomous_Paths::red_elims()
 	doinker.set_value(true);
 }
 
-void Eclipse::Autonomous_Paths::blue_awp_rush()
-{
+void Eclipse::Autonomous_Paths::Red::ring_side_rush(){
+
+}
+
+// Blue paths
+void Eclipse::Autonomous_Paths::Blue::solo_awp(){
+
+}
+
+void Eclipse::Autonomous_Paths::Blue::left_half_awp(){
 	clamp.set_value(true);
 	intake_lift.set_value(true); // raise the intake
 	chassis.setPose(0, 0, 0);
@@ -258,8 +273,11 @@ void Eclipse::Autonomous_Paths::blue_awp_rush()
 	wall_stake.move_voltage(0);
 }
 
-void Eclipse::Autonomous_Paths::blue_elims()
-{
+void Eclipse::Autonomous_Paths::Blue::right_half_awp(){
+
+}
+
+void Eclipse::Autonomous_Paths::Blue::goal_side_rush(){
 	clamp.set_value(true);
 	intake_lift.set_value(true); // raise the intake
 	chassis.setPose(0, 0, 0);
@@ -325,6 +343,10 @@ void Eclipse::Autonomous_Paths::blue_elims()
 	clamp.set_value(false); // drop off mogo
 	r_pid.set_r_constants(2.5, 0, 15);
 	r_pid.rotation_pid(-90, 90, 2); // turn to face second goal
+}
+
+void Eclipse::Autonomous_Paths::Blue::ring_side_rush(){
+
 }
 
 void Eclipse::Autonomous_Paths::skills()
@@ -539,7 +561,6 @@ void Eclipse::Autonomous_Paths::skills()
 	wall_stake.move_voltage(12000);
 }
 
-// 7
 void Eclipse::Autonomous_Paths::test()
 {
 	// ALLIANCE STAKE SECTION

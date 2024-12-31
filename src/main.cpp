@@ -2,7 +2,6 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 
-
 using namespace Eclipse;
 
 // Eclipse::RobotConfig RobotConfig(
@@ -60,14 +59,12 @@ void autonomous(){
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
-	// auton.red_awp_rush(); //1
-	// auton.blue_awp_rush(); //2
-	auton.red_elims(); //3
-	// auton.blue_elims(); //4
+	// Run auton selector for
+	gui.run_selected_auton();
+	
+	// auton.skills();
 
-	// auton.skills(); //8
-
-	// auton.test(); //7
+	// auton.test();
 }
 
 /**

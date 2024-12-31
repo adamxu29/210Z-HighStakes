@@ -31,6 +31,8 @@ Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
 Autonomous_Paths auton;
+Autonomous_Paths::Red red;
+Autonomous_Paths::Blue blue;
 GUI gui;
 
 lemlib::Drivetrain_t drivetrain {

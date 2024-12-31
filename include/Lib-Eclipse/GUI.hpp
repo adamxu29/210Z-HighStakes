@@ -5,8 +5,8 @@ namespace Eclipse{
         public:
             // Define all objects
             lv_obj_t *home_screen, *team_logo, *auton_home_btn, *sensors_home_btn, *debug_home_btn;
-            lv_obj_t *auton_screen, *auton_title, *alliance_color, *red_btn, *blue_btn, *autonomous_path, *rush_awp, *safe_awp,
-            *goal_side_rush, *ring_side_rush, *auton_return_home;
+            lv_obj_t *auton_screen, *auton_title, *alliance_color, *red_btn, *blue_btn, *autonomous_path, *solo_awp, *left_half_awp,
+            *right_half_awp, *goal_side_rush, *ring_side_rush, *auton_return_home;
             lv_obj_t *sensor_screen, *sensor_title, *position_readings, *drivetrain_encoders, *drivetrain_temp,
             *motor_temp, *sensor_return_home;
             lv_obj_t *debug_screen, *debug_title, *debug_line_1, *debug_line_2, *debug_line_3, *debug_line_4, *debug_line_5,
@@ -40,6 +40,9 @@ namespace Eclipse{
 
             lv_obj_t *current_selected_path = nullptr;
             static lv_res_t autonomous_path_callback(lv_obj_t *btn);
+
+            int selected_color = -1;
+            int selected_path = -1;
                     
             void initialize_styles();
             void initialize_objects();
@@ -48,7 +51,7 @@ namespace Eclipse{
             void display_sensors();
             void display_debug_terminal();
             void return_to_home();
+
+            void run_selected_auton();
     };
 } 
-
-extern Eclipse::GUI gui;

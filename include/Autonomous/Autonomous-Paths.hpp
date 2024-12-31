@@ -1,14 +1,27 @@
 namespace Eclipse{
     class Autonomous_Paths{
-        public:
-            void red_awp_rush();
-            void red_elims();
+    public:
+        // Red side autons
+        class Red{
+            public:
+                void solo_awp();
+                void left_half_awp();
+                void right_half_awp();
+                void ring_side_rush();
+                void goal_side_rush();
+        };
 
-            void blue_awp_rush();
-            void blue_elims();
-
-            void skills();
-
-            void test();
-    };    
+        // Blue side autons
+        class Blue{
+            public:
+                void solo_awp();
+                void left_half_awp();
+                void right_half_awp();
+                void ring_side_rush();
+                void goal_side_rush();
+        };
+        
+        void skills();
+        void test();
+    };
 }

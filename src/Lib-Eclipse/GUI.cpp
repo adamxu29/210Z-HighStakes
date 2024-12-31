@@ -13,7 +13,6 @@ lv_style_t GUI::style_pressed_red_btn;
 lv_style_t GUI::style_purple_btn;
 lv_style_t GUI::style_pressed_purple_btn;
 
-
 // vrc brain: 480 x 240
 void GUI::initialize_styles() {
     lv_style_copy(&style_screen_bg, &lv_style_plain);
@@ -94,6 +93,15 @@ lv_res_t GUI::alliance_color_callback(lv_obj_t *btn) {
         gui.current_selected_color = btn;
         lv_btn_set_state(btn, LV_BTN_STATE_TGL_REL);
     }
+    if (gui.current_selected_color == gui.red_btn){
+        gui.selected_color = 0;
+    }
+    else if (gui.current_selected_color == gui.blue_btn){
+        gui.selected_color = 1;
+    }
+    else{
+        gui.selected_color = -1;
+    }
     return LV_RES_OK; // Indicate that the event was handled
 }
 
@@ -106,6 +114,24 @@ lv_res_t GUI::autonomous_path_callback(lv_obj_t *btn) {
         // Set the new button as selected
         gui.current_selected_path = btn;
         lv_btn_set_state(btn, LV_BTN_STATE_TGL_REL);
+    }
+    if (gui.current_selected_path == gui.solo_awp){
+            gui.selected_path = 0;
+        }
+        else if(gui.current_selected_path == gui.left_half_awp){
+            gui.selected_path = 1;
+        }
+        else if(gui.current_selected_path == gui.right_half_awp){
+            gui.selected_path = 2;
+        }
+        else if(gui.current_selected_path == gui.goal_side_rush){
+            gui.selected_path = 3;
+        }
+        else if(gui.current_selected_path == gui.ring_side_rush){
+            gui.selected_path = 4;
+        }
+        else{
+            gui.selected_path = -1;
     }
     return LV_RES_OK; // Indicate that the event was handled
 }
@@ -136,7 +162,7 @@ void GUI::initialize_objects() {
         lv_obj_set_size(gui.sensors_home_btn, 140, 30);
         lv_obj_align(gui.sensors_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 105);
         lv_label_set_text(lv_label_create(gui.sensors_home_btn, NULL), "Sensors");
-    
+
     gui.debug_home_btn = lv_btn_create(gui.home_screen, NULL);
         lv_btn_set_style(gui.debug_home_btn, LV_BTN_STYLE_REL, &gui.style_purple_btn);
         lv_btn_set_style(gui.debug_home_btn, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
@@ -151,7 +177,7 @@ void GUI::initialize_objects() {
 
     gui.auton_title = lv_label_create(gui.auton_screen, NULL);
         lv_label_set_style(gui.auton_title, &gui.style_title);
-        lv_obj_align(gui.auton_title, NULL, LV_ALIGN_IN_TOP_LEFT, 137, 10);
+        lv_obj_align(gui.auton_title, NULL, LV_ALIGN_IN_TOP_LEFT, 137, 12);
         lv_label_set_text(gui.auton_title, "Autonomous Selector");
 
     gui.alliance_color = lv_label_create(gui.auton_screen, NULL);
@@ -181,38 +207,48 @@ void GUI::initialize_objects() {
         lv_obj_set_size(gui.blue_btn, 200, 30);
         lv_obj_align(gui.blue_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 260, 62);
 
-    // Initialize the current selected button
+    // Initialize the current selected buttons
     gui.current_selected_color = nullptr; 
     gui.current_selected_path = nullptr;
-    // Initially, no button is selected
     
     gui.autonomous_path = lv_label_create(gui.auton_screen, NULL);
         lv_label_set_style(gui.autonomous_path, &gui.style_text);
         lv_obj_align(gui.autonomous_path, NULL, LV_ALIGN_IN_TOP_LEFT, 156, 96);
         lv_label_set_text(gui.autonomous_path, "Autonomous Path");
     
-    gui.rush_awp = lv_btn_create(gui.auton_screen, NULL);
-        lv_btn_set_toggle(gui.rush_awp, true);
-        lv_btn_set_style(gui.rush_awp, LV_BTN_STYLE_REL, &gui.style_purple_btn);
-        lv_btn_set_style(gui.rush_awp, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
-        lv_btn_set_style(gui.rush_awp, LV_BTN_STYLE_TGL_REL, &gui.style_pressed_purple_btn);
-        lv_btn_set_style(gui.rush_awp, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
-        lv_btn_set_action(gui.rush_awp, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
-        lv_obj_set_size(gui.rush_awp, 140, 30);
-        lv_obj_align(gui.rush_awp, NULL, LV_ALIGN_IN_TOP_LEFT, 76, 121);
-        lv_label_set_text(lv_label_create(gui.rush_awp, NULL), "Rush AWP");
+    gui.solo_awp = lv_btn_create(gui.auton_screen, NULL);
+        lv_btn_set_toggle(gui.solo_awp, true);
+        lv_btn_set_style(gui.solo_awp, LV_BTN_STYLE_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.solo_awp, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.solo_awp, LV_BTN_STYLE_TGL_REL, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.solo_awp, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
+        lv_btn_set_action(gui.solo_awp, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
+        lv_obj_set_size(gui.solo_awp, 140, 30);
+        lv_obj_align(gui.solo_awp, NULL, LV_ALIGN_IN_TOP_LEFT, 170, 121);
+        lv_label_set_text(lv_label_create(gui.solo_awp, NULL), "Solo AWP");
     
-    gui.safe_awp = lv_btn_create(gui.auton_screen, NULL);
-        lv_btn_set_toggle(gui.safe_awp, true);
-        lv_btn_set_style(gui.safe_awp, LV_BTN_STYLE_REL, &gui.style_purple_btn);
-        lv_btn_set_style(gui.safe_awp, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
-        lv_btn_set_style(gui.safe_awp, LV_BTN_STYLE_TGL_REL, &gui.style_pressed_purple_btn);
-        lv_btn_set_style(gui.safe_awp, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
-        lv_btn_set_action(gui.safe_awp, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
-        lv_obj_set_size(gui.safe_awp, 140, 30);
-        lv_obj_align(gui.safe_awp, NULL, LV_ALIGN_IN_TOP_LEFT, 263, 121);
-        lv_label_set_text(lv_label_create(gui.safe_awp, NULL), "Safe AWP");
+    gui.left_half_awp = lv_btn_create(gui.auton_screen, NULL);
+        lv_btn_set_toggle(gui.left_half_awp, true);
+        lv_btn_set_style(gui.left_half_awp, LV_BTN_STYLE_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.left_half_awp, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.left_half_awp, LV_BTN_STYLE_TGL_REL, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.left_half_awp, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
+        lv_btn_set_action(gui.left_half_awp, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
+        lv_obj_set_size(gui.left_half_awp, 140, 30);
+        lv_obj_align(gui.left_half_awp, NULL, LV_ALIGN_IN_TOP_LEFT, 76, 161);
+        lv_label_set_text(lv_label_create(gui.left_half_awp, NULL), "Left Half AWP");
     
+    gui.right_half_awp = lv_btn_create(gui.auton_screen, NULL);
+        lv_btn_set_toggle(gui.right_half_awp, true);
+        lv_btn_set_style(gui.right_half_awp, LV_BTN_STYLE_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.right_half_awp, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.right_half_awp, LV_BTN_STYLE_TGL_REL, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.right_half_awp, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
+        lv_btn_set_action(gui.right_half_awp, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
+        lv_obj_set_size(gui.right_half_awp, 140, 30);
+        lv_obj_align(gui.right_half_awp, NULL, LV_ALIGN_IN_TOP_LEFT, 263, 161);
+        lv_label_set_text(lv_label_create(gui.right_half_awp, NULL), "Right Half AWP");
+
     gui.goal_side_rush = lv_btn_create(gui.auton_screen, NULL);
         lv_btn_set_toggle(gui.goal_side_rush, true);
         lv_btn_set_style(gui.goal_side_rush, LV_BTN_STYLE_REL, &gui.style_purple_btn);
@@ -221,7 +257,7 @@ void GUI::initialize_objects() {
         lv_btn_set_style(gui.goal_side_rush, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
         lv_btn_set_action(gui.goal_side_rush, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
         lv_obj_set_size(gui.goal_side_rush, 140, 30);
-        lv_obj_align(gui.goal_side_rush, NULL, LV_ALIGN_IN_TOP_LEFT, 76, 161);        
+        lv_obj_align(gui.goal_side_rush, NULL, LV_ALIGN_IN_TOP_LEFT, 76, 201);        
         lv_label_set_text(lv_label_create(gui.goal_side_rush, NULL), "Goal Side Rush");
     
     gui.ring_side_rush = lv_btn_create(gui.auton_screen, NULL);
@@ -232,9 +268,9 @@ void GUI::initialize_objects() {
         lv_btn_set_style(gui.ring_side_rush, LV_BTN_STYLE_TGL_PR, &gui.style_purple_btn);
         lv_btn_set_action(gui.ring_side_rush, LV_BTN_ACTION_CLICK, gui.autonomous_path_callback);
         lv_obj_set_size(gui.ring_side_rush, 140, 30);
-        lv_obj_align(gui.ring_side_rush, NULL, LV_ALIGN_IN_TOP_LEFT, 263, 161);
+        lv_obj_align(gui.ring_side_rush, NULL, LV_ALIGN_IN_TOP_LEFT, 263, 201);
         lv_label_set_text(lv_label_create(gui.ring_side_rush, NULL), "Ring Side Rush");
-    
+
     gui.auton_return_home = lv_btn_create(gui.auton_screen, NULL);
         lv_btn_set_style(gui.auton_return_home, LV_BTN_STYLE_REL, &gui.style_purple_btn);
         lv_btn_set_style(gui.auton_return_home, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
@@ -255,23 +291,23 @@ void GUI::initialize_objects() {
 
     gui.position_readings = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.position_readings, &gui.style_text);
-        lv_obj_align(gui.position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 50);
+        lv_obj_align(gui.position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
         lv_label_set_text(gui.position_readings, "X: 0.0 Y: 0.0 Heading: 0.0°");
 
     gui.drivetrain_encoders = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.drivetrain_encoders, &gui.style_text);
-        lv_obj_align(gui.drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 67);
+        lv_obj_align(gui.drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
         // Drivetrain encoders and temperature
         lv_label_set_text(gui.drivetrain_encoders, "FL: 0.0 ML: 0.0 BL: 0.0 FR: 0.0 MR: 0.0 BR: 0.0");
 
     gui.drivetrain_temp = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.drivetrain_temp, &gui.style_text);
-        lv_obj_align(gui.drivetrain_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 84);
-        lv_label_set_text(gui.drivetrain_temp, "FL: 0.0°C ML: 0.0°C BL: 0.0°C FR: 0.0°C MR: 0.0°C BR: 0.0°C");
+        lv_obj_align(gui.drivetrain_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_label_set_text(gui.drivetrain_temp, "Drivetrain Temperature: 0.0°C");
 
     gui.motor_temp = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.motor_temp, &gui.style_text);
-        lv_obj_align(gui.motor_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 101);
+        lv_obj_align(gui.motor_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
         lv_label_set_text(gui.motor_temp, "Intake: 0.0°C LBL: 0.0°C LBR: 0.0°C");
 
     gui.sensor_return_home = lv_btn_create(gui.sensor_screen, NULL);
@@ -291,50 +327,49 @@ void GUI::initialize_objects() {
         lv_obj_align(gui.debug_title, NULL, LV_ALIGN_IN_TOP_LEFT, 180, 15);
         // Set title
         lv_label_set_text(gui.debug_title, "Debug Terminal");
-
     gui.debug_line_1 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_1, &gui.style_text);
-        lv_obj_align(gui.debug_line_1, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 50);
+        lv_obj_align(gui.debug_line_1, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
         lv_label_set_text(gui.debug_line_1, "Debug Line 1: ");
 
     gui.debug_line_2 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_2, &gui.style_text);
-        lv_obj_align(gui.debug_line_2, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 67);
+        lv_obj_align(gui.debug_line_2, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
         lv_label_set_text(gui.debug_line_2, "Debug Line 2: ");
 
     gui.debug_line_3 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_3, &gui.style_text);
-        lv_obj_align(gui.debug_line_3, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 84);
+        lv_obj_align(gui.debug_line_3, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
         lv_label_set_text(gui.debug_line_3, "Debug Line 3: ");
 
     gui.debug_line_4 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_4, &gui.style_text);
-        lv_obj_align(gui.debug_line_4, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 101);
+        lv_obj_align(gui.debug_line_4, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
         lv_label_set_text(gui.debug_line_4, "Debug Line 4: ");
 
     gui.debug_line_5 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_5, &gui.style_text);
-        lv_obj_align(gui.debug_line_5, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 118);
+        lv_obj_align(gui.debug_line_5, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 118);
         lv_label_set_text(gui.debug_line_5, "Debug Line 5: ");
 
     gui.debug_line_6 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_6, &gui.style_text);
-        lv_obj_align(gui.debug_line_6, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 135);    
+        lv_obj_align(gui.debug_line_6, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 135);    
         lv_label_set_text(gui.debug_line_6, "Debug Line 6: ");
 
     gui.debug_line_7 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_7, &gui.style_text);
-        lv_obj_align(gui.debug_line_7, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 152);
+        lv_obj_align(gui.debug_line_7, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 152);
         lv_label_set_text(gui.debug_line_7, "Debug Line 7: ");
 
     gui.debug_line_8 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_8, &gui.style_text);
-        lv_obj_align(gui.debug_line_8, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 169);
+        lv_obj_align(gui.debug_line_8, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 169);
         lv_label_set_text(gui.debug_line_8, "Debug Line 8: ");
 
     gui.debug_line_9 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_9, &gui.style_text);
-        lv_obj_align(gui.debug_line_9, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 186);
+        lv_obj_align(gui.debug_line_9, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 186);
         lv_label_set_text(gui.debug_line_9, "Debug Line 9: ");
 
     gui.debug_return_home = lv_btn_create(gui.debug_screen, NULL);
@@ -367,3 +402,33 @@ void GUI::display_debug_terminal() {
     lv_scr_load(gui.debug_screen);
 }
 
+void GUI::run_selected_auton(){
+    switch(gui.selected_color){
+        case 0:
+            switch(gui.selected_path){
+                case 0:
+                    return red.solo_awp();
+                case 1:
+                    return red.left_half_awp();
+                case 2:
+                    return red.right_half_awp();
+                case 3:
+                    return red.goal_side_rush();
+                case 5:
+                    return red.ring_side_rush();
+            }
+        case 1:
+            switch(gui.selected_path){
+                case 0:
+                    return blue.solo_awp();
+                case 1:
+                    return blue.left_half_awp();
+                case 2:
+                    return blue.right_half_awp();
+                case 3:
+                    return blue.goal_side_rush();
+                case 5:
+                    return blue.ring_side_rush();
+            }
+    }
+}

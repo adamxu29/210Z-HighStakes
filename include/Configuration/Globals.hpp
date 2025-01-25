@@ -9,10 +9,16 @@ extern pros::Motor_Group left_drive;
 extern pros::Motor_Group right_drive;
 
 extern pros::Motor intake;
-extern pros::Motor_Group wall_stake;
+extern pros::Motor wall_stake;
+
+extern pros::Rotation horizontal_rotation_sensor;
+extern pros::Rotation wall_stake_rotation_sensor;
+
+extern pros::Optical color;
 
 extern pros::ADIDigitalOut clamp;
 extern pros::ADIDigitalOut doinker;
+extern pros::ADIAnalogIn ring_rush;
 extern pros::ADIDigitalOut intake_lift;
 extern pros::ADIDigitalOut ratchet;
 
@@ -31,7 +37,10 @@ extern Eclipse::Autonomous_Paths auton;
 extern Eclipse::Autonomous_Paths::Red red;
 extern Eclipse::Autonomous_Paths::Blue blue;
 extern Eclipse::GUI gui;
+extern Eclipse::PID m_pid;
 
 extern bool skills;
+
+extern lemlib::TrackingWheel horizontal_tracking_wheel;
 
 extern lemlib::Chassis chassis;

@@ -76,11 +76,16 @@ double Utility::get_position()
     return (left_position + right_position) / 2;
 }
 
+double Utility::get_drive_temp(){
+    return (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
+}
+
 double Utility::get_wall_stake_position(){
-    double left_position = wall_stake.get_positions()[0];
-    double right_position = wall_stake.get_positions()[1];
+    // double left_position = wall_stake.get_positions()[0];
+    // double right_position = wall_stake.get_positions()[1];
     
-    return (left_position + right_position) / 2;
+    // return (left_position + right_position) / 2;
+    return wall_stake.get_position();
 }
 
 double Utility::get_heading()
@@ -109,6 +114,20 @@ void Utility::reset_position()
 
     left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
+}
+
+void Utility::sort_red(){
+    if(color.get_hue() > this->blue_min || color.get_hue() < this->blue_max){
+        pros::delay(sort_delay);
+        intake.brake();
+    }
+}
+
+void Utility::sort_blue(){
+    if(color.get_hue() > this->red_min || color.get_hue() < this->red_max){
+        pros::delay(sort_delay);
+        intake.brake();
+    }
 }
 
 // misc

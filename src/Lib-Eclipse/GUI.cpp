@@ -294,21 +294,30 @@ void GUI::initialize_objects() {
         lv_obj_align(gui.position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
         lv_label_set_text(gui.position_readings, "X: 0.0 Y: 0.0 Heading: 0.0°");
 
-    gui.drivetrain_encoders = lv_label_create(gui.sensor_screen, NULL);
-        lv_label_set_style(gui.drivetrain_encoders, &gui.style_text);
-        lv_obj_align(gui.drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
-        // Drivetrain encoders and temperature
-        lv_label_set_text(gui.drivetrain_encoders, "FL: 0.0 ML: 0.0 BL: 0.0 FR: 0.0 MR: 0.0 BR: 0.0");
+    gui.left_drivetrain_encoders = lv_label_create(gui.sensor_screen, NULL);
+        lv_label_set_style(gui.left_drivetrain_encoders, &gui.style_text);
+        lv_obj_align(gui.left_drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
+        lv_label_set_text(gui.left_drivetrain_encoders, "FL: 0.0 ML: 0.0 BL: 0.0");
+
+    gui.right_drivetrain_encoders = lv_label_create(gui.sensor_screen, NULL);
+        lv_label_set_style(gui.right_drivetrain_encoders, &gui.style_text);
+        lv_obj_align(gui.right_drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_label_set_text(gui.right_drivetrain_encoders, "FR: 0.0 MR: 0.0 BR: 0.0");
+
+    gui.misc_sensors = lv_label_create(gui.sensor_screen, NULL);
+        lv_label_set_style(gui.misc_sensors, &gui.style_text);
+        lv_obj_align(gui.misc_sensors, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
+        lv_label_set_text(gui.misc_sensors, "Wall Stake: 0.0 Color Sensor: 0.0");
 
     gui.drivetrain_temp = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.drivetrain_temp, &gui.style_text);
-        lv_obj_align(gui.drivetrain_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_obj_align(gui.drivetrain_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 118);
         lv_label_set_text(gui.drivetrain_temp, "Drivetrain Temperature: 0.0°C");
 
     gui.motor_temp = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.motor_temp, &gui.style_text);
-        lv_obj_align(gui.motor_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
-        lv_label_set_text(gui.motor_temp, "Intake: 0.0°C LBL: 0.0°C LBR: 0.0°C");
+        lv_obj_align(gui.motor_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 135);
+        lv_label_set_text(gui.motor_temp, "Intake: 0.0°C LB: 0.0°C");
 
     gui.sensor_return_home = lv_btn_create(gui.sensor_screen, NULL);
         lv_btn_set_style(gui.sensor_return_home, LV_BTN_STYLE_REL, &gui.style_purple_btn);
@@ -431,4 +440,29 @@ void GUI::run_selected_auton(){
                     return blue.ring_side_rush();
             }
     }
+}
+
+void GUI::update_sensors(){
+    char buffer[300];
+
+    // sprintf(buffer, "X: %.2f Y: %.2f Heading: %.2f°", util.get_position(), util.get_wall_stake_position(), util.get_heading());
+    // lv_label_set_text(gui.position_readings, buffer);
+
+    sprintf(buffer, "FL: %.2f ML: %.2f BL: %.2f", left_drive.get_positions()[0], left_drive.get_positions()[1], left_drive.get_positions()[2]);
+    lv_label_set_text(gui.left_drivetrain_encoders, buffer);
+    
+    sprintf(buffer, "FR: %.2f MR: %.2f BR: %.2f", right_drive.get_positions()[0], right_drive.get_positions()[1], right_drive.get_positions()[2]);
+    lv_label_set_text(gui.right_drivetrain_encoders, buffer);
+
+    sprintf(buffer, "LB Position: %.2f Color Sensor: 0.0", ((float)wall_stake_rotation_sensor.get_position()) / 100.0 /*, color.get_hue()*/);
+    lv_label_set_text(gui.misc_sensors, buffer);
+}
+
+void GUI::update_temps(){
+    char buffer[300];
+    sprintf(buffer, "Drivetrain Temperature: %.2f°C", util.get_drive_temp());
+    lv_label_set_text(gui.drivetrain_temp, buffer);
+
+    sprintf(buffer, "Intake: %.2f°C LB: %.2f°C", intake.get_temperature(), wall_stake.get_temperature());
+    lv_label_set_text(gui.motor_temp, buffer);
 }

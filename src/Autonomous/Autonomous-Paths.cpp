@@ -88,7 +88,7 @@ void Eclipse::Autonomous_Paths::Red::left_half_awp(){
 	chassis.moveTo(0, -19, 5000, 100); // move back onto goal (-21.2)
 
 	clamp.set_value(true);
-	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	wall_stake.move_voltage(-4000);
 
 	chassis.setPose(0, 0, 0);
@@ -269,7 +269,7 @@ void Eclipse::Autonomous_Paths::Blue::left_half_awp(){
 	chassis.turnTo(-28.628, 30.949, 300);	   // turn to pole middle
 	chassis.moveTo(-43.071, 6.964, 5000, 100); // touch pole
 	pros::delay(100);
-	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	wall_stake.move_voltage(0);
 }
 

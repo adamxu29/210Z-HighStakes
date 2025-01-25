@@ -30,37 +30,41 @@ void initialize() {
 
 	imu1.tare_rotation();
 	imu2.tare_rotation();
-	line.calibrate();
 	chassis.calibrate();
 	wall_stake.set_zero_position(0);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
-	//pros::delay(3000);
+	wall_stake_rotation_sensor.set_position(-1350);
+
+	color.set_led_pwm(50);
 }
 
 // could potentially be used for auto hang after match ends, test it out
 void disabled() {
-	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+
 }
 
 void competition_initialize() {
-	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-}
 
+}
+char buffer[300];
 void autonomous(){
-	t_pid.set_drive_constants(2.75, 0.8, 600);
+	t_pid.set_drive_constants(3.25, 0.75, 600);
 	// t_pid constants: kp: 5, kd: 15
 	// r_pid constants: kd: 2.5, kd: 15
 	
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
 	// Run auton selector for
-	gui.run_selected_auton();
+	// gui.run_selected_auton();
+
+	m_pid.set_constants(4, 0, 0, 3, 4, 5, 50, 127 * 0.9);
+	m_pid.motor_pid(wall_stake, wall_stake_rotation_sensor, 90.0, 100, 1000);
 	
 	// auton.skills();
 
@@ -82,28 +86,20 @@ void autonomous(){
  */
 
 void opcontrol() {
-	//wall_stake.set_zero_position(0);
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
-	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
-	float drivetrain_temperature;
 
 	skills = false; // make true if running skills
 
 	while(true){
-		drivetrain_temperature = (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
-		controller.print(0, 0, "DT: %0.1f", drivetrain_temperature);
-		// controller.print(0, 0, "Heading: %0.1f", util.get_heading());
-		// controller.print(0, 0, "Line: %04d", line.get_value());
+		controller.print(0, 0, "DT: %0.1f", util.get_drive_temp());
+
 		if(tuning){
 			tuner.driver_tuner();
 		}
 		else{
-			wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-			// std::cout << "pos: " << left_drive.get_positions()[0] << std::endl;
-			// std::cout << "left pos: " << left_drive.get_positions()[0] << ", " << left_drive.get_positions()[1] << ", " << left_drive.get_positions()[2] << std::endl;
-			// std::cout << "right pos: " << right_drive.get_positions()[0] << ", " << right_drive.get_positions()[1] << ", " << right_drive.get_positions()[2] << std::endl;
 			driver.driver_control();
 		}
 		pros::delay(8);

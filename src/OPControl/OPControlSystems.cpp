@@ -1,13 +1,3 @@
-int score_position = 2300;
-int prime_position = -520;
-
-bool clamping = false;
-bool doinker_down = false;
-bool intake_up = false;
-bool ratchet_used = false;
-
-bool skills = false;
-
 #include "main.h"
 
 using namespace Eclipse;
@@ -61,91 +51,66 @@ void Eclipse::OPControl::drivetrain_control(){
 }
 
 void Eclipse::OPControl::power_intake(int speed){ // speed in percent
-    if(controller.get_digital(skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){ intake.move_voltage(-12000 * speed / 100); }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){ intake.move_voltage(12000 * speed / 100); }
+    if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){ intake.move_voltage(12000 * speed / 100); }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){ intake.move_voltage(-12000 * speed / 100); }
     else{ intake.move_voltage(0); }
 }
 
-// void Eclipse::OPControl::manual_wall_stake(int speed){
-//     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){ wall_stake.move_voltage(-12000 * speed / 100); }
-//     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(12000 * speed / 100); }
-//     else{ wall_stake.move_voltage(0); }
-// }
+void Eclipse::OPControl::manual_wall_stake(int speed){
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(12000 * speed / 100); }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(-12000 * speed / 100); }
+    else{ wall_stake.move_velocity(0); }
+}
 
 void Eclipse::OPControl::activate_clamp(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
-        clamping = !clamping;
-        clamp.set_value(clamping);
+        this->clamping = !this->clamping;
+        clamp.set_value(this->clamping);
     }
 }
 
 void Eclipse::OPControl::activate_doinker(){
-    if(controller.get_digital_new_press( skills ? pros::E_CONTROLLER_DIGITAL_Y : pros::E_CONTROLLER_DIGITAL_B/**Skills: RIGHT */)){
-        doinker_down = !doinker_down;
-        doinker.set_value(doinker_down);
+    if(controller.get_digital_new_press( this->skills ? pros::E_CONTROLLER_DIGITAL_Y : pros::E_CONTROLLER_DIGITAL_B/**Skills: RIGHT */)){
+        this->doinker_down = !this->doinker_down;
+        doinker.set_value(this->doinker_down);
+    }
+}
+
+void Eclipse::OPControl::activate_ring_rush(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+        this->ring_rush_down = !this->ring_rush_down;
+        ring_rush.set_value(this->ring_rush_down);
     }
 }
 
 void Eclipse::OPControl::lift_intake(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
-        intake_up = !intake_up;
-        intake_lift.set_value(intake_up);
-    }
-}
-
-int base_lighting = 2700;
-int prime_lighting = 200; // base: 2900
-bool primed = false;
-bool scoring = false;
-bool reset = true;
-
-void Eclipse::OPControl::prime_wall_stake(){
-    if((line.get_value() < prime_lighting)){
-        wall_stake.move_velocity(0);
-    }
-    else if(util.get_wall_stake_position() > (prime_position - 10)){
-        if((line.get_value() > base_lighting) && scoring){
-            wall_stake.move_voltage(-3000);
-        }
-    }
-    else if(util.get_wall_stake_position() < (prime_position)){
-        if((line.get_value() > base_lighting) && scoring){
-            wall_stake.move_voltage(3000);
-        }
+        this->intake_up = !this->intake_up;
+        intake_lift.set_value(this->intake_up);
     }
 }
 
 void Eclipse::OPControl::power_wall_stake(){
-    if((controller.get_digital(skills ? pros::E_CONTROLLER_DIGITAL_L1 : pros::E_CONTROLLER_DIGITAL_L2/**Skills: L1 */))){
-        scoring = false;
-        wall_stake.move_voltage(12000);
-    }
-    else if(controller.get_digital(skills ? pros::E_CONTROLLER_DIGITAL_R1 : pros::E_CONTROLLER_DIGITAL_L1)){
-        scoring = false;
-        wall_stake.move_voltage(-12000);
-    }
-    else if(controller.get_digital_new_press(skills ? pros::E_CONTROLLER_DIGITAL_B : pros::E_CONTROLLER_DIGITAL_RIGHT/**Skills: B */)){
-        scoring = true;
-    }
-    else if (scoring == false){
-        wall_stake.move_velocity(0);
-    }
+
 }
 
 void Eclipse::OPControl::ratchet_mech(){
-    if((controller.get_digital_new_press(skills ? pros::E_CONTROLLER_DIGITAL_RIGHT : pros::E_CONTROLLER_DIGITAL_UP))){
+    if((controller.get_digital_new_press(this->skills ? pros::E_CONTROLLER_DIGITAL_RIGHT : pros::E_CONTROLLER_DIGITAL_UP))){
         ratchet_used = !ratchet_used;
         ratchet.set_value(ratchet_used);
     }
 }
 
 void Eclipse::OPControl::driver_control(){
-    skills ? driver.exponential_curve_accelerator() : driver.drivetrain_control();
+    this->skills ? driver.exponential_curve_accelerator() : driver.drivetrain_control();
     driver.power_intake(100);
-    driver.prime_wall_stake();
-    driver.power_wall_stake();
+    // driver.manual_wall_stake(100);
+    
     driver.activate_clamp();
     driver.activate_doinker();
     driver.lift_intake();
     driver.ratchet_mech();
+
+    gui.update_sensors();
+    gui.update_temps();
 }

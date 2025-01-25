@@ -7,8 +7,8 @@ namespace Eclipse{
             lv_obj_t *home_screen, *team_logo, *auton_home_btn, *sensors_home_btn, *debug_home_btn;
             lv_obj_t *auton_screen, *auton_title, *alliance_color, *red_btn, *blue_btn, *autonomous_path, *solo_awp, *left_half_awp,
             *right_half_awp, *goal_side_rush, *ring_side_rush, *auton_return_home;
-            lv_obj_t *sensor_screen, *sensor_title, *position_readings, *drivetrain_encoders, *drivetrain_temp,
-            *motor_temp, *sensor_return_home;
+            lv_obj_t *sensor_screen, *sensor_title, *position_readings, *left_drivetrain_encoders, *right_drivetrain_encoders,
+            *misc_sensors, *drivetrain_temp, *motor_temp, *sensor_return_home;
             lv_obj_t *debug_screen, *debug_title, *debug_line_1, *debug_line_2, *debug_line_3, *debug_line_4, *debug_line_5,
             *debug_line_6, *debug_line_7, *debug_line_8, *debug_line_9, *debug_return_home;
 
@@ -53,5 +53,9 @@ namespace Eclipse{
             void return_to_home();
 
             void run_selected_auton();
+
+            void update_sensors();
+            void update_temps();
+            void debug_terminal();
     };
 } 

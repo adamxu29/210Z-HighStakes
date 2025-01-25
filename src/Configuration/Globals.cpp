@@ -34,14 +34,19 @@ pros::IMU imu2(17);
 Utility util;
 OPControl driver;
 PID_Tuner tuner;
+
 Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
+PID m_pid;
+Odom odom;
+
 Autonomous_Paths auton;
 Autonomous_Paths::Red red;
 Autonomous_Paths::Blue blue;
+
 GUI gui;
-PID m_pid;
+
 
 lemlib::Drivetrain_t drivetrain {
     &left_drive, // left drivetrain motors

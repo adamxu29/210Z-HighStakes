@@ -18,7 +18,7 @@ extern pros::Optical color;
 
 extern pros::ADIDigitalOut clamp;
 extern pros::ADIDigitalOut doinker;
-extern pros::ADIAnalogIn ring_rush;
+extern pros::ADIDigitalOut ring_rush;
 extern pros::ADIDigitalOut intake_lift;
 extern pros::ADIDigitalOut ratchet;
 

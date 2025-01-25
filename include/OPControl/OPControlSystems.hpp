@@ -26,3 +26,10 @@ namespace Eclipse{
             void skills_control();
     };
 }
+
+
+////////read note in .cpp
+
+void nextState();
+void backState();
+void liftControl();

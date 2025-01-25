@@ -57,9 +57,9 @@ void Eclipse::OPControl::power_intake(int speed){ // speed in percent
 }
 
 void Eclipse::OPControl::manual_wall_stake(int speed){
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(12000 * speed / 100); }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(-12000 * speed / 100); }
-    else{ wall_stake.move_velocity(0); }
+    // if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(12000 * speed / 100); }
+    // else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(-12000 * speed / 100); }
+    // else{ wall_stake.move_velocity(0); }
 }
 
 void Eclipse::OPControl::activate_clamp(){
@@ -113,4 +113,44 @@ void Eclipse::OPControl::driver_control(){
 
     gui.update_sensors();
     gui.update_temps();
+}
+
+/// Maxwell: to adam, when you have time, convert these into eclipse library
+
+
+
+const int numStates = 4;
+//the tutorial sucks so i just did it myself <- put degrees into states; accounts for centidegrees in error calculation
+double states[numStates] = {-13.5, 15, 27, 175}; 
+int currState = 0;
+int target = 0;
+
+void nextState() {
+    currState += 1;
+    if (currState == numStates) {
+        currState = 0;
+    }
+    target = states[currState];
+}
+
+void backState() {
+	currState -= 1;
+	// if (currState == numStates) { //enable/disable looping pos states for bottom access?
+	// 	currState = 0;
+	// }
+	target = states [currState];
+}
+
+    double kp = 4.1;
+    double kd = 1; //good enough bruh ts is too cancerous just keep these values for now and work on smthn else
+    double error = 0;
+    double previous_error = 0;
+    double derivative = 0;
+void liftControl() {
+    error = target - (wall_stake_rotation_sensor.get_position()/100.0);
+    derivative = error - previous_error;
+    previous_error = error;
+
+    double velocity = (kp * error) - abs((kd * derivative));
+    wall_stake.move(velocity);
 }

@@ -11,7 +11,7 @@ namespace Eclipse{
             double prev_error;
             int error_threshold; 
             int tolerance;
-            int failsfe_threshold;
+            int failsafe_threshold;
             int failsafe_tolerance;
             int counter;
             int failsafe;
@@ -25,6 +25,6 @@ namespace Eclipse{
 
             double compute(double current_pos, double target);
 
-            void motor_pid(pros::Motor &motor, pros::Rotation &rotation, double target, double maxSpeed, double timeOut);
+            void motor_pid(pros::Motor &motor, pros::Rotation &rotation, double target);
     };
 }

@@ -65,27 +65,19 @@ void Eclipse::PID::motor_pid(pros::Motor &motor, pros::Rotation &rotation, doubl
         double voltage = compute(current_position, target);
 
         motor.move_voltage(voltage);
-        
-        if(fabs(this->error) < this->error_threshold){
-            this->counter++;
-        }
-        else{
-            this->counter = 0;
-        }
 
-        if(this->counter >= this->tolerance){
+        fabs(this->error) < this->error_threshold ? this->counter++; : this->counter = 0;
+
+        if(this->counter >= this->tolerance){ 
             motor.move_voltage(0);
             break;
         }
 
-        if(fabs(this->derivative) < this->failsafe_threshold){
-            this->failsafe++;
-        }
+        fabs(this->derivative) < this->failsafe_threshold ? this->failsafe++;
 
         if(this->failsafe > this->failsafe_tolerance){
             motor.move_voltage(0);
             break;
         }
     }
- 
 }

@@ -35,7 +35,12 @@ void initialize() {
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
-	wall_stake_rotation_sensor.set_position(-1350);
+	    pros::Task liftControlTask([]{
+        while (true) {
+            liftControl();
+            pros::delay(10);
+        }
+    	});
 
 	color.set_led_pwm(50);
 }
@@ -63,12 +68,9 @@ void autonomous(){
 	// Run auton selector for
 	// gui.run_selected_auton();
 
-	m_pid.set_constants(4.0, 0.0, 0.0, 3.0, 4.0, 5.0, 50.0, 127 * 0.9);
-	m_pid.motor_pid(wall_stake, wall_stake_rotation_sensor, 90);
-
 	// auton.skills();
 
-	// auton.test();
+	auton.test();
 }
 
 /**
@@ -88,7 +90,7 @@ void autonomous(){
 void opcontrol() {
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
-	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	//wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 
 	driver.skills = false; // make true if running skills
@@ -101,6 +103,15 @@ void opcontrol() {
 		}
 		else{
 			driver.driver_control();
+			//temp (CHANGE AFTER RUMBLE.)
+			if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+				nextState();
+			} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+				backState();
+			}
+
+
+
 		}
 		pros::delay(8);
 	}

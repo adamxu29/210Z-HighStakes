@@ -63,9 +63,9 @@ void autonomous(){
 	// Run auton selector for
 	// gui.run_selected_auton();
 
-	m_pid.set_constants(4, 0, 0, 3, 4, 5, 50, 127 * 0.9);
-	m_pid.motor_pid(wall_stake, wall_stake_rotation_sensor, 90.0, 100, 1000);
-	
+	m_pid.set_constants(4.0, 0.0, 0.0, 3.0, 4.0, 5.0, 50.0, 127 * 0.9);
+	m_pid.motor_pid(wall_stake, wall_stake_rotation_sensor, 90);
+
 	// auton.skills();
 
 	// auton.test();
@@ -91,7 +91,7 @@ void opcontrol() {
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 
-	skills = false; // make true if running skills
+	driver.skills = false; // make true if running skills
 
 	while(true){
 		controller.print(0, 0, "DT: %0.1f", util.get_drive_temp());

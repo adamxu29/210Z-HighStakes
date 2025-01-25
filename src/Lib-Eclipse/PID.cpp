@@ -1,4 +1,5 @@
 #include "main.h"
+#include "cmath"
 
 using namespace Eclipse;
 
@@ -56,24 +57,23 @@ void Eclipse::PID::motor_pid(pros::Motor &motor, pros::Rotation &rotation, doubl
     reset_variables();
 
     double local_timer = 0;
-    this->max_speed = maxSpeed;
 
     while(true){
-        double current_position;
-        &rotation == nullptr ? current_position = motor.get_position() : current_position = rotation.get_position() / 100.0;
-
+        double current_position = rotation.get_position() / 100.0;
         double voltage = compute(current_position, target);
 
         motor.move_voltage(voltage);
 
-        fabs(this->error) < this->error_threshold ? this->counter++; : this->counter = 0;
+        fabs(this->error) < this->error_threshold ? this->counter++ : this->counter = 0;
 
         if(this->counter >= this->tolerance){ 
             motor.move_voltage(0);
             break;
         }
 
-        fabs(this->derivative) < this->failsafe_threshold ? this->failsafe++;
+        if(fabs(this->derivative) < this->failsafe_threshold){
+            this->failsafe++;
+        }
 
         if(this->failsafe > this->failsafe_tolerance){
             motor.move_voltage(0);

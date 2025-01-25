@@ -15,9 +15,7 @@ namespace Eclipse{
             int failsafe_tolerance;
             int counter;
             int failsafe;
-            int max_speed;
-
-            PID();
+            double max_speed;
 
             void set_constants(const double kp, const double ki, const double kd, const double tolerance, const double error_threshold, const double failsafe_tolerance, const double failsafe_threshold, const double max_speed);
 

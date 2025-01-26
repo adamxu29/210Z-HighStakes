@@ -51,9 +51,14 @@ void Eclipse::OPControl::drivetrain_control(){
 }
 
 void Eclipse::OPControl::power_intake(int speed){ // speed in percent
-    if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){ intake.move_voltage(12000 * speed / 100); }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){ intake.move_voltage(-12000 * speed / 100); }
-    else{ intake.move_voltage(0); }
+    if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){
+        intake.move_voltage(12000 * speed / 100);
+        color.set_led_pwm(100);
+    }
+    else{
+        intake.move_voltage(0);
+        color.set_led_pwm(0);
+    }
 }
 
 void Eclipse::OPControl::manual_wall_stake(int speed){
@@ -76,13 +81,6 @@ void Eclipse::OPControl::activate_doinker(){
     }
 }
 
-void Eclipse::OPControl::activate_ring_rush(){
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
-        this->ring_rush_down = !this->ring_rush_down;
-        ring_rush.set_value(this->ring_rush_down);
-    }
-}
-
 void Eclipse::OPControl::lift_intake(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
         this->intake_up = !this->intake_up;
@@ -90,15 +88,25 @@ void Eclipse::OPControl::lift_intake(){
     }
 }
 
-void Eclipse::OPControl::power_wall_stake(){
-
+void Eclipse::OPControl::next_state() {
+    this->current_state++;
+    if (this->current_state > this->num_states - 1) {
+        this->current_state = 0;
+    }
+    this->target = states[this->current_state];
 }
 
-void Eclipse::OPControl::ratchet_mech(){
-    if((controller.get_digital_new_press(this->skills ? pros::E_CONTROLLER_DIGITAL_RIGHT : pros::E_CONTROLLER_DIGITAL_UP))){
-        ratchet_used = !ratchet_used;
-        ratchet.set_value(ratchet_used);
-    }
+void Eclipse::OPControl::prev_state() {
+	this->current_state--;
+	if (this->current_state < 0) {
+		this->current_state = this->num_states - 1;
+	}
+	this->target = states[this->current_state];
+}
+
+void Eclipse::OPControl::power_wall_stake(){
+    m_pid.set_constants(3.5, 0.0, 10, 10, 1.5, 5, 500, 127);
+	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 }
 
 void Eclipse::OPControl::driver_control(){
@@ -109,48 +117,7 @@ void Eclipse::OPControl::driver_control(){
     driver.activate_clamp();
     driver.activate_doinker();
     driver.lift_intake();
-    driver.ratchet_mech();
 
     gui.update_sensors();
     gui.update_temps();
-}
-
-/// Maxwell: to adam, when you have time, convert these into eclipse library
-
-
-
-const int numStates = 4;
-//the tutorial sucks so i just did it myself <- put degrees into states; accounts for centidegrees in error calculation
-double states[numStates] = {-13.5, 15, 27, 175}; 
-int currState = 0;
-int target = 0;
-
-void nextState() {
-    currState += 1;
-    if (currState == numStates) {
-        currState = 0;
-    }
-    target = states[currState];
-}
-
-void backState() {
-	currState -= 1;
-	// if (currState == numStates) { //enable/disable looping pos states for bottom access?
-	// 	currState = 0;
-	// }
-	target = states [currState];
-}
-
-    double kp = 4.1;
-    double kd = 1; //good enough bruh ts is too cancerous just keep these values for now and work on smthn else
-    double error = 0;
-    double previous_error = 0;
-    double derivative = 0;
-void liftControl() {
-    error = target - (wall_stake_rotation_sensor.get_position()/100.0);
-    derivative = error - previous_error;
-    previous_error = error;
-
-    double velocity = (kp * error) - abs((kd * derivative));
-    wall_stake.move(velocity);
 }

@@ -3,12 +3,12 @@ namespace Eclipse
     class Utility
     {
         private:
-            int red_max = 20;
+            int red_max = 30;
             int red_min = 0;
             int blue_max = 225;
             int blue_min = 200;
 
-            int sort_delay = 150;
+            int sort_delay = 25;
         public:
             // motion
             void move_left_drive(int voltage);
@@ -20,6 +20,10 @@ namespace Eclipse
             void move_intake_lift();
 
             // sensing
+            double get_robot_x();
+            double get_robot_y();
+            void set_robot_position(double x, double y);
+
             double get_position();
             double get_drive_temp();
             double get_wall_stake_position();

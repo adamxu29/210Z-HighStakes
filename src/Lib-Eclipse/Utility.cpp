@@ -65,6 +65,13 @@ using namespace Eclipse;
 
 // sensing
 
+double Utility::get_robot_x(){ return robot_x; }
+double Utility::get_robot_y(){ return robot_y; }
+void Utility::set_robot_position(double x, double y){
+    robot_x = x;
+    robot_y = y;
+}
+
 double Utility::get_position()
 {
     // use motors that disconnect the least
@@ -80,13 +87,12 @@ double Utility::get_drive_temp(){
     return (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
 }
 
-double Utility::get_wall_stake_position(){
-    // double left_position = wall_stake.get_positions()[0];
-    // double right_position = wall_stake.get_positions()[1];
+// double Utility::get_wall_stake_position(){
+//     double left_position = wall_stake.get_positions()[0];
+//     double right_position = wall_stake.get_positions()[1];
     
-    // return (left_position + right_position) / 2;
-    return wall_stake.get_position();
-}
+//     return (left_position + right_position) / 2;
+// }
 
 double Utility::get_heading()
 {
@@ -115,18 +121,37 @@ void Utility::reset_position()
     left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 }
-
+// Sort blue rings on red side
 void Utility::sort_red(){
-    if(color.get_hue() > this->blue_min || color.get_hue() < this->blue_max){
+    if(color.get_hue() > this->blue_min && color.get_hue() < this->blue_max){
+        char buffer[300];   
+        sprintf(buffer, "Hue: %.1f", color.get_hue());
+        lv_label_set_text(gui.debug_line_1, buffer);
+
+        sprintf(buffer, "Blue Detected");
+        lv_label_set_text(gui.debug_line_2, buffer);
+
         pros::delay(sort_delay);
-        intake.brake();
+        driver.driving = false;
+        intake.move_voltage(-1000);
+        pros::delay(75);
+        driver.driving = true;
     }
 }
-
+// Sort red rings on blue side
 void Utility::sort_blue(){
-    if(color.get_hue() > this->red_min || color.get_hue() < this->red_max){
+    if(color.get_hue() > this->red_min && color.get_hue() < this->red_max){
+        char buffer[300];
+        sprintf(buffer, "Hue: %.1f", color.get_hue());
+        lv_label_set_text(gui.debug_line_1, buffer);
+        
+        sprintf(buffer, "Red Detected");
+        lv_label_set_text(gui.debug_line_2, buffer);
         pros::delay(sort_delay);
-        intake.brake();
+        driver.driving = false;
+        intake.move_voltage(-1000);
+        pros::delay(75);
+        driver.driving = true;
     }
 }
 

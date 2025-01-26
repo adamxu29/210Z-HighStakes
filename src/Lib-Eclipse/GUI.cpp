@@ -259,7 +259,7 @@ void GUI::initialize_objects() {
         lv_obj_set_size(gui.goal_side_rush, 140, 30);
         lv_obj_align(gui.goal_side_rush, NULL, LV_ALIGN_IN_TOP_LEFT, 76, 201);        
         lv_label_set_text(lv_label_create(gui.goal_side_rush, NULL), "Goal Side Rush");
-    
+
     gui.ring_side_rush = lv_btn_create(gui.auton_screen, NULL);
         lv_btn_set_toggle(gui.ring_side_rush, true);
         lv_btn_set_style(gui.ring_side_rush, LV_BTN_STYLE_REL, &gui.style_purple_btn);
@@ -416,28 +416,28 @@ void GUI::run_selected_auton(){
         case 0:
             switch(gui.selected_path){
                 case 0:
-                    return red.solo_awp();
+                    red.solo_awp();
                 case 1:
-                    return red.left_half_awp();
+                    red.left_half_awp();
                 case 2:
-                    return red.right_half_awp();
+                    red.right_half_awp();
                 case 3:
-                    return red.goal_side_rush();
+                    red.goal_side_rush();
                 case 5:
-                    return red.ring_side_rush();
+                    red.ring_side_rush();
             }
         case 1:
             switch(gui.selected_path){
                 case 0:
-                    return blue.solo_awp();
+                    blue.solo_awp();
                 case 1:
-                    return blue.left_half_awp();
+                    blue.left_half_awp();
                 case 2:
-                    return blue.right_half_awp();
+                    blue.right_half_awp();
                 case 3:
-                    return blue.goal_side_rush();
+                    blue.goal_side_rush();
                 case 5:
-                    return blue.ring_side_rush();
+                    blue.ring_side_rush();
             }
     }
 }
@@ -445,16 +445,16 @@ void GUI::run_selected_auton(){
 void GUI::update_sensors(){
     char buffer[300];
 
-    // sprintf(buffer, "X: %.2f Y: %.2f Heading: %.2f°", util.get_position(), util.get_wall_stake_position(), util.get_heading());
-    // lv_label_set_text(gui.position_readings, buffer);
+    sprintf(buffer, "X: %.2f Y: %.2f Heading: %.2f°", util.get_robot_x(), util.get_robot_y(), util.get_heading());
+    lv_label_set_text(gui.position_readings, buffer);
 
     sprintf(buffer, "FL: %.2f ML: %.2f BL: %.2f", left_drive.get_positions()[0], left_drive.get_positions()[1], left_drive.get_positions()[2]);
     lv_label_set_text(gui.left_drivetrain_encoders, buffer);
-    
+
     sprintf(buffer, "FR: %.2f MR: %.2f BR: %.2f", right_drive.get_positions()[0], right_drive.get_positions()[1], right_drive.get_positions()[2]);
     lv_label_set_text(gui.right_drivetrain_encoders, buffer);
 
-    sprintf(buffer, "LB Position: %.2f Color Sensor: 0.0", ((float)wall_stake_rotation_sensor.get_position()) / 100.0 /*, color.get_hue()*/);
+    sprintf(buffer, "LB Position: %.2f Color Sensor: %.2f", ((float)wall_stake_rotation_sensor.get_position()) / 100.0 , color.get_hue());
     lv_label_set_text(gui.misc_sensors, buffer);
 }
 

@@ -61,23 +61,60 @@ void Eclipse::PID::motor_pid(pros::Motor &motor, pros::Rotation &rotation, doubl
     while(true){
         double current_position = rotation.get_position() / 100.0;
         double voltage = compute(current_position, target);
+        motor.move_voltage(voltage * (12000.0 / 127.0));
+        
+        if(fabs(this->error) < this->error_threshold){
+            this->counter++;
+        }
+        else{
+            this->counter = 0;
+        }
 
-        motor.move_voltage(voltage);
-
-        fabs(this->error) < this->error_threshold ? this->counter++ : this->counter = 0;
-
-        if(this->counter >= this->tolerance){ 
-            motor.move_voltage(0);
+        if(this->counter > this->tolerance){ 
+            motor.brake();
+            std::cout << "PID loop completed" << std::endl;
             break;
         }
 
-        if(fabs(this->derivative) < this->failsafe_threshold){
+        if(fabs(this->derivative) > this->failsafe_threshold){
             this->failsafe++;
         }
 
         if(this->failsafe > this->failsafe_tolerance){
-            motor.move_voltage(0);
+            motor.brake();
+            std::cout << "failsafe" << std::endl;
             break;
         }
+        pros::delay(10);
+    }
+}
+
+void Eclipse::PID::wall_stake_pid(pros::Motor &motor, pros::Rotation &rotation, double target){
+    double current_position = wall_stake_rotation_sensor.get_position() / 100.0;
+    double voltage = m_pid.compute(current_position, driver.target);
+    wall_stake.move_voltage(voltage * (12000.0 / 127.0));
+
+    // Check if the target has been reached
+    if (fabs(m_pid.error) < m_pid.error_threshold) {
+        m_pid.counter++;
+    } else {
+        m_pid.counter = 0;
+    }
+
+    // If the target is reached for the required tolerance duration
+    if (m_pid.counter > m_pid.tolerance) {
+        wall_stake.brake();
+        m_pid.reset_variables();
+    }
+
+    // Handle failsafe logic
+    if (fabs(m_pid.derivative) > m_pid.failsafe_threshold) {
+        m_pid.failsafe++;
+    }
+
+    if (m_pid.failsafe > m_pid.failsafe_tolerance) {
+        driver.current_state = 0;
+        driver.target = driver.states[driver.current_state];
+        m_pid.reset_variables();
     }
 }

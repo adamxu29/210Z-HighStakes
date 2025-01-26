@@ -349,6 +349,7 @@ void Eclipse::Autonomous_Paths::Blue::ring_side_rush(){
 
 }
 
+// Misc paths
 void Eclipse::Autonomous_Paths::skills()
 {
 	// ALLIANCE STAKE SECTION
@@ -553,7 +554,6 @@ void Eclipse::Autonomous_Paths::skills()
 
 	wall_stake.move_absolute(-2000, 200);
 	pros::delay(500);
-	ratchet.set_value(true);
 
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, -90, 1000, 200);
@@ -764,7 +764,6 @@ void Eclipse::Autonomous_Paths::test()
 
 	wall_stake.move_absolute(-2000, 200);
 	pros::delay(500);
-	ratchet.set_value(true);
 
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, -80, 1500, 200);

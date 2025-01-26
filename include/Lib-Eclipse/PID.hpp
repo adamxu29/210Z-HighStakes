@@ -24,5 +24,7 @@ namespace Eclipse{
             double compute(double current_pos, double target);
 
             void motor_pid(pros::Motor &motor, pros::Rotation &rotation, double target);
+
+            void wall_stake_pid(pros::Motor &motor, pros::Rotation &rotation, double target);
     };
 }

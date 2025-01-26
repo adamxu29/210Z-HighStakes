@@ -75,7 +75,7 @@ void opcontrol(void);
 #ifdef __cplusplus
 // autonomous
 #include "Lib-Eclipse/Chassis/Chassis_PID.hpp"
-//#include "Lib-Eclipse/Chassis/Odometry.hpp"
+#include "Lib-Eclipse/Chassis/Odometry.hpp"
 #include "Lib-Eclipse/PID.hpp"
 #include "Autonomous/Autonomous-Paths.hpp"
 

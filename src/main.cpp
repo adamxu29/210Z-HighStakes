@@ -31,18 +31,31 @@ void initialize() {
 	imu1.tare_rotation();
 	imu2.tare_rotation();
 	chassis.calibrate();
-	wall_stake.set_zero_position(0);
+	wall_stake_rotation_sensor.set_position(-1350);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
-	    pros::Task liftControlTask([]{
-        while (true) {
-            liftControl();
-            pros::delay(10);
-        }
-    	});
+	pros::Task wall_stake_control([]{
+		while (true) {
+			if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+				driver.next_state();
+			} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+				driver.prev_state();
+			}
 
-	color.set_led_pwm(50);
+			driver.power_wall_stake();
+			pros::delay(8);
+		}
+	});
+
+	pros::Task color_sorting([]{
+		while(true){
+			(gui.selected_color == 0) ? util.sort_red() : util.sort_blue();
+			pros::delay(8);
+		}
+	});
+
+	color.set_led_pwm(0);
 }
 
 // could potentially be used for auto hang after match ends, test it out
@@ -70,7 +83,7 @@ void autonomous(){
 
 	// auton.skills();
 
-	auton.test();
+	// auton.test();
 }
 
 /**
@@ -90,7 +103,7 @@ void autonomous(){
 void opcontrol() {
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
-	//wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 
 	driver.skills = false; // make true if running skills
@@ -101,17 +114,8 @@ void opcontrol() {
 		if(tuning){
 			tuner.driver_tuner();
 		}
-		else{
+		else if(driver.driving){
 			driver.driver_control();
-			//temp (CHANGE AFTER RUMBLE.)
-			if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-				nextState();
-			} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-				backState();
-			}
-
-
-
 		}
 		pros::delay(8);
 	}

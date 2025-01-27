@@ -65,12 +65,12 @@ using namespace Eclipse;
 
 // sensing
 
-double Utility::get_robot_x(){ return robot_x; }
-double Utility::get_robot_y(){ return robot_y; }
-void Utility::set_robot_position(double x, double y){
-    robot_x = x;
-    robot_y = y;
-}
+// double Utility::get_robot_x(){ return robot_x; }
+// double Utility::get_robot_y(){ return robot_y; }
+// void Utility::set_robot_position(double x, double y){
+//     robot_x = x;
+//     robot_y = y;
+// }
 
 double Utility::get_position()
 {

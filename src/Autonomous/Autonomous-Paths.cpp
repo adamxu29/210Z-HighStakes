@@ -12,7 +12,92 @@ using namespace Eclipse;
 
 // Red paths
 void Eclipse::Autonomous_Paths::Red::solo_awp(){
+	wall_stake_rotation_sensor.set_position(382.0);
+	// turn so front is facing alliance stake and back is facing goal
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-45, 90, 1200);
 
+	// score alliance stake
+	driver.alliance_stake();
+	pros::delay(650);
+
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, -5, 600);
+
+	driver.next_state();
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-17, 90, 800); //-20
+
+	// clamp goal
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, -29, 500);
+	chassis.moveTo(0, -33.8, 900, 100);
+	
+	clamp.set_value(true);
+	pros::delay(150);
+
+	// turn to ring 1
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(90, 90, .5);
+
+	// intake ring 1
+	intake.move_voltage(12000);
+
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, 24.5, 1000);
+	chassis.moveTo(0, 19.8, 750); //move back to align with ring closest to middle in 8-stack
+
+	// turn to ring 2
+	// r_pid.set_r_constants(2.5, 0, 15);
+	// r_pid.rotation_pid(180, 90, 2); //185
+	chassis.setPose(0,0,0);
+	chassis.turnTo(100,0,800);
+
+	// drive to intake ring 2 and drive back
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, 16.1, 1000);
+	pros::delay(100);
+	chassis.moveTo(0, 10, 700);
+
+	// turn to ring 3
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(315, 90, 1);
+
+	// intake ring 3
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, 41, 1000); //42
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(270, 90, 1.5);
+
+	clamp.set_value(false);
+
+	//intake double ring stack at mid
+	chassis.setPose(0, 0, 0);
+	//chassis.moveTo(0, 8, 1000, 50);
+	chassis.moveTo(0, 40, 5000, 65);
+
+	pros::delay(290);
+	intake.move_voltage(0);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-8, 90, .75); //21.5 degrees
+
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, -27, 1000);
+
+	clamp.set_value(true);
+	pros::delay(150);
+
+	intake.move_voltage(12000);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(85, 90, 2);
+
+	// driver.prev_state();
+	
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, 21.195, 5000,80);
 }
 
 void Eclipse::Autonomous_Paths::Red::left_half_awp(){
@@ -100,7 +185,48 @@ void Eclipse::Autonomous_Paths::Red::left_half_awp(){
 }
 
 void Eclipse::Autonomous_Paths::Red::right_half_awp(){
-	
+	// turn so front is facing alliance stake and back is facing goal
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(25, 90, 2);
+
+	// score aliance stake
+	driver.alliance_stake();
+
+	pros::delay(250);
+
+	driver.next_state();
+
+	// clamp goal
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, -35, 5000, 127);
+	chassis.moveTo(0, -38.896, 5000, 90);
+
+	pros::delay(250);
+	clamp.set_value(true);
+
+	// turn to ring 1
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-90, 90, 2);
+
+	// intake ring 1
+	intake.move_voltage(12000);
+
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, 24.491, 5000);
+
+	intake.move_voltage(0);
+
+	r_pid.set_r_constants(2.5, 0, 15);
+	r_pid.rotation_pid(-25, 90, 2);
+
+	chassis.setPose(0, 0, 0);
+	chassis.moveTo(0, 35.627, 5000);
+
+	intake_lift.set_value(true);
+
+	chassis.moveTo(0, 40.45, 5000);
+
+	intake.move_voltage(12000);
 }
 
 void Eclipse::Autonomous_Paths::Red::goal_side_rush(){
@@ -178,7 +304,92 @@ void Eclipse::Autonomous_Paths::Red::ring_side_rush(){
 
 // Blue paths
 void Eclipse::Autonomous_Paths::Blue::solo_awp(){
+wall_stake_rotation_sensor.set_position(382.0);
+// turn so front is facing alliance stake and back is facing goal
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(45, 90, 1200);
 
+// score alliance stake
+driver.alliance_stake();
+pros::delay(650);
+
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, -5, 600);
+
+driver.next_state();
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(17, 90, 800); //-20
+
+// clamp goal
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, -29, 500);
+chassis.moveTo(0, -33.8, 900, 100);
+
+clamp.set_value(true);
+pros::delay(150);
+
+// turn to ring 1
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(-90, 90, .5);
+
+// intake ring 1
+intake.move_voltage(12000);
+
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, 24.5, 1000);
+chassis.moveTo(0, 19.8, 750); //move back to align with ring closest to middle in 8-stack
+
+// turn to ring 2
+// r_pid.set_r_constants(2.5, 0, 15);
+// r_pid.rotation_pid(180, 90, 2); //185
+chassis.setPose(0,0,0);
+chassis.turnTo(-100,0,800);
+
+// drive to intake ring 2 and drive back
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, 16.1, 1000);
+pros::delay(100);
+chassis.moveTo(0, 10, 700);
+
+// turn to ring 3
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(-315, 90, 1);
+
+// intake ring 3
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, 41, 1000); //42
+
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(-270, 90, 1.5);
+
+clamp.set_value(false);
+
+//intake double ring stack at mid
+chassis.setPose(0, 0, 0);
+//chassis.moveTo(0, 8, 1000, 50);
+chassis.moveTo(0, 40, 5000, 65);
+
+pros::delay(290);
+intake.move_voltage(0);
+
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(8, 90, .75); //21.5 degrees
+
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, -27, 1000);
+
+clamp.set_value(true);
+pros::delay(150);
+
+intake.move_voltage(12000);
+
+r_pid.set_r_constants(2.5, 0, 15);
+r_pid.rotation_pid(-85, 90, 2);
+
+// driver.prev_state();
+
+chassis.setPose(0, 0, 0);
+chassis.moveTo(0, 21.195, 5000,80);
 }
 
 void Eclipse::Autonomous_Paths::Blue::left_half_awp(){

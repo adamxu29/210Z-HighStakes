@@ -37,12 +37,7 @@ void initialize() {
 
 	pros::Task wall_stake_control([]{
 		while (true) {
-			if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-				driver.next_state();
-			} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-				driver.prev_state();
-			}
-
+			driver.control_wall_stake();
 			driver.power_wall_stake();
 			pros::delay(8);
 		}
@@ -50,7 +45,12 @@ void initialize() {
 
 	pros::Task color_sorting([]{
 		while(true){
-			(gui.selected_color == 0) ? util.sort_red() : util.sort_blue();
+			if(gui.selected_color == 0){
+				util.sort_red();
+			}
+			else if(gui.selected_color == 1){
+				util.sort_blue();
+			}
 			pros::delay(8);
 		}
 	});
@@ -58,13 +58,12 @@ void initialize() {
 	color.set_led_pwm(0);
 }
 
-// could potentially be used for auto hang after match ends, test it out
 void disabled() {
-
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 void competition_initialize() {
-
+	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 char buffer[300];
 void autonomous(){
@@ -74,13 +73,17 @@ void autonomous(){
 	
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
+	color.set_led_pwm(100);
 
 	// Run auton selector for
 	// gui.run_selected_auton();
 
+	//red.solo_awp();
+	blue.solo_awp();
 	// auton.skills();
 
 	// auton.test();
@@ -103,6 +106,7 @@ void autonomous(){
 void opcontrol() {
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+	intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 

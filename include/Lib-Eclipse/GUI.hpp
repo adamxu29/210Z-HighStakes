@@ -41,7 +41,7 @@ namespace Eclipse{
             lv_obj_t *current_selected_path = nullptr;
             static lv_res_t autonomous_path_callback(lv_obj_t *btn);
 
-            int selected_color = -1;
+            int selected_color = 1;
             int selected_path = -1;
                     
             void initialize_styles();

@@ -52,8 +52,11 @@ void Eclipse::OPControl::drivetrain_control(){
 
 void Eclipse::OPControl::power_intake(int speed){ // speed in percent
     if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){
-        intake.move_voltage(12000 * speed / 100);
+        intake.move_voltage(12000 * (speed / 100));
         color.set_led_pwm(100);
+    }
+    else if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L1 : pros::E_CONTROLLER_DIGITAL_R2 /**Skills: L2 */ )){
+        intake.move_voltage(-12000 * (speed / 100));
     }
     else{
         intake.move_voltage(0);
@@ -90,7 +93,7 @@ void Eclipse::OPControl::lift_intake(){
 
 void Eclipse::OPControl::next_state() {
     this->current_state++;
-    if (this->current_state > this->num_states - 1) {
+    if (this->current_state > this->num_states - 2) {
         this->current_state = 0;
     }
     this->target = states[this->current_state];
@@ -99,7 +102,7 @@ void Eclipse::OPControl::next_state() {
 void Eclipse::OPControl::prev_state() {
 	this->current_state--;
 	if (this->current_state < 0) {
-		this->current_state = this->num_states - 1;
+		this->current_state = this->num_states - 2;
 	}
 	this->target = states[this->current_state];
 }
@@ -109,11 +112,24 @@ void Eclipse::OPControl::power_wall_stake(){
 	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 }
 
+void Eclipse::OPControl::control_wall_stake(){
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+        driver.next_state();
+    } else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+        driver.prev_state();
+    }
+}
+
+void Eclipse::OPControl::alliance_stake(){
+    this->current_state = this->num_states - 1;
+    this->target = states[this->current_state];
+}
+
 void Eclipse::OPControl::driver_control(){
     this->skills ? driver.exponential_curve_accelerator() : driver.drivetrain_control();
     driver.power_intake(100);
     // driver.manual_wall_stake(100);
-    
+
     driver.activate_clamp();
     driver.activate_doinker();
     driver.lift_intake();

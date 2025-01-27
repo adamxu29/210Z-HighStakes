@@ -18,11 +18,11 @@ pros::Rotation wall_stake_rotation_sensor(9);
 
 pros::Optical color(2);
 
-pros::ADIDigitalOut clamp('h');
-pros::ADIDigitalOut doinker('g');
+pros::ADIDigitalOut clamp('g');
+pros::ADIDigitalOut doinker('d');
 pros::ADIDigitalOut goal_rush_release('c');
-pros::ADIDigitalOut ring_rush('f');
-pros::ADIDigitalOut intake_lift('e');
+pros::ADIDigitalOut ring_rush('a');
+pros::ADIDigitalOut intake_lift('b');
 
 pros::ADIAnalogIn line('f');
 
@@ -39,7 +39,7 @@ Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
 PID m_pid;
-Odom odom;
+// Odom odom;
 
 Autonomous_Paths auton;
 Autonomous_Paths::Red red;

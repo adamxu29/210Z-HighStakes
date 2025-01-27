@@ -35,7 +35,7 @@ extern Eclipse::Translation_PID t_pid;
 extern Eclipse::Rotation_PID r_pid;
 extern Eclipse::Curve_PID c_pid;
 extern Eclipse::PID m_pid;
-extern Eclipse::Odom odom;
+// extern Eclipse::Odom odom;
 
 extern Eclipse::Autonomous_Paths auton;
 extern Eclipse::Autonomous_Paths::Red red;

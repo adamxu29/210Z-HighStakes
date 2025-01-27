@@ -4,7 +4,7 @@ namespace Eclipse
     {
         private:
 
-            int sort_delay = 22;
+            
         public:
             // motion
             void move_left_drive(int voltage);
@@ -24,10 +24,12 @@ namespace Eclipse
             double get_drive_temp();
             double get_wall_stake_position();
             double get_heading();
-            int red_max = 30;
+            int red_max = 20;
             int red_min = 0;
             int blue_max = 225;
             int blue_min = 200;
+            int sort_delay = 22;
+            bool sorting = true;
             void sort_red();
             void sort_blue();
             void reset_position();

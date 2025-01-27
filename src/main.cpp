@@ -44,7 +44,7 @@ void initialize() {
 	});
 
 	pros::Task color_sorting([]{
-		while(true){
+		while(util.sorting){
 			if(gui.selected_color == 0){
 				util.sort_red();
 			}
@@ -82,9 +82,8 @@ void autonomous(){
 	// Run auton selector for
 	// gui.run_selected_auton();
 
-	//red.solo_awp();
-	blue.solo_awp();
-	// auton.skills();
+	// red.right_half_awp();
+	auton.skills();
 
 	// auton.test();
 }
@@ -109,6 +108,8 @@ void opcontrol() {
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
+	util.sorting = true;
+	util.sort_delay = 22;
 
 	driver.skills = false; // make true if running skills
 

@@ -135,6 +135,7 @@ void Utility::sort_red(){
         driver.driving = false;
         intake.move_voltage(-1000);
         pros::delay(75);
+        intake.move_voltage(12000);
         driver.driving = true;
     }
 }
@@ -144,13 +145,15 @@ void Utility::sort_blue(){
         char buffer[300];
         sprintf(buffer, "Hue: %.1f", color.get_hue());
         lv_label_set_text(gui.debug_line_1, buffer);
-        
+
         sprintf(buffer, "Red Detected");
         lv_label_set_text(gui.debug_line_2, buffer);
+
         pros::delay(sort_delay);
         driver.driving = false;
         intake.move_voltage(-1000);
         pros::delay(75);
+        intake.move_voltage(12000);
         driver.driving = true;
     }
 }

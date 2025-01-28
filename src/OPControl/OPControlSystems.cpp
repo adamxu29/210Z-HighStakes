@@ -53,10 +53,11 @@ void Eclipse::OPControl::drivetrain_control(){
 void Eclipse::OPControl::power_intake(int speed){ // speed in percent
     if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){
         intake.move_voltage(12000 * (speed / 100));
-        color.set_led_pwm(100);
+        color.set_led_pwm(50);
     }
     else if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L1 : pros::E_CONTROLLER_DIGITAL_R2 /**Skills: L2 */ )){
         intake.move_voltage(-12000 * (speed / 100));
+        color.set_led_pwm(50);
     }
     else{
         intake.move_voltage(0);
@@ -92,6 +93,15 @@ void Eclipse::OPControl::lift_intake(){
 }
 
 void Eclipse::OPControl::next_state() {
+    if(this-> current_state == 1){
+        driver.driving = false;
+
+        intake.move_voltage(-6000);
+        pros::delay(40);
+        intake.move_voltage(0);
+
+        driver.driving = true;
+    }
     this->current_state++;
     if (this->current_state > this->num_states - 2) {
         this->current_state = 0;

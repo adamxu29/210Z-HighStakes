@@ -77,7 +77,7 @@ void autonomous(){
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
-	color.set_led_pwm(100);
+	// color.set_led_pwm(50);
 
 	// Run auton selector for
 	// gui.run_selected_auton();

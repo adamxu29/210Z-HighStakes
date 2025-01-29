@@ -104,16 +104,18 @@ void Eclipse::Autonomous_Paths::Red::solo_awp()
 
 void Eclipse::Autonomous_Paths::Red::left_half_awp()
 {
+	gui.selected_color = 0;
 	r_pid.set_r_constants(2.5, 0, 17);
-	r_pid.rotation_pid(-20, 90, .6);
+	r_pid.rotation_pid(-25, 90, .6);
 
 	ring_rush.set_value(true);
 
 	chassis.setPose(0, 0, 0);
-	chassis.moveTo(0, 47, 2000);
-	chassis.moveTo(0, 51.033, 2000, 100);
-	pros::delay(150);
-	chassis.moveTo(-3.473, 28.161, 1000);
+	chassis.moveTo(0, 41, 2000, 50);
+	chassis.moveTo(-3, 17, 1000);
+
+	ring_rush.set_value(true);
+	pros::delay(250);
 
 	r_pid.set_r_constants(2.5, 0, 17);
 	r_pid.rotation_pid(-125, 90, .8);
@@ -127,6 +129,8 @@ void Eclipse::Autonomous_Paths::Red::left_half_awp()
 
 	r_pid.set_r_constants(2.5, 0, 17);
 	r_pid.rotation_pid(-90, 90, .6);
+
+	intake.move_voltage(-12000);
 
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, 25.275, 2000, 50);
@@ -592,8 +596,8 @@ void Eclipse::Autonomous_Paths::skills()
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, -13.5, 600, 80);
 	clamp.set_value(true);
-	pros::delay(500);
-	chassis.moveTo(0, -21, 800);
+	pros::delay(150);
+	chassis.moveTo(0, -21.5, 800);
 
 	// turn to ring 1
 	r_pid.set_r_constants(2.5, 0, 17);
@@ -604,7 +608,6 @@ void Eclipse::Autonomous_Paths::skills()
 	// intake ring 1
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, 33, 900, 100);
-	pros::delay(250);
 	chassis.moveTo(3, 21, 800);
 
 	// turn and intake ring 2
@@ -613,8 +616,7 @@ void Eclipse::Autonomous_Paths::skills()
 
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, 59, 800);
-	chassis.moveTo(23.5, 61, 1500, 80); // make sure x is aligned with top ring
-	pros::delay(500);
+	chassis.moveTo(23.5, 61.2, 1500, 80); // make sure x is aligned with top ring
 
 	// intake ring 3 for lb
 	r_pid.set_r_constants(2.5, 0, 17);
@@ -622,35 +624,32 @@ void Eclipse::Autonomous_Paths::skills()
 
 	// lb up
 	intake.move_voltage(0);
-	driver.next_state();
-	pros::delay(150); // shorten this delay if the lb moves into pos in time
+	driver.next_state();// shorten this delay if the lb moves into pos in time
 	intake.move_voltage(12000);
 
 	chassis.setPose(0, 0, 0);
-	chassis.moveTo(0, 15, 1100, 50);
+	chassis.moveTo(0, 10, 1100, 50);
 
 	// intake ring 4 for lb
-
 	chassis.setPose(0, 0, 0);
 	chassis.turnTo(-18, -50, 900, true);
 	intake.move_voltage(0);
 
 	chassis.setPose(0,0,0); 
-	chassis.moveTo(0,-56,1000); //move back
-	pros::delay(200);
+	chassis.moveTo(0,-44,1000); //move back
 	
 	driver.next_state();
 
 	r_pid.set_r_constants(2.5, 0, 17);
-	r_pid.rotation_pid(89, 90, 0.7); // face wallstake
+	r_pid.rotation_pid(90, 90, 0.7); // face wallstake
 	intake.move_voltage(12000);
 
 	chassis.setPose(0, 8, 0);
-	chassis.moveTo(0, 30, 1500, 40); // intake ring
-	pros::delay(750);				 // intake delay
+	chassis.moveTo(0, 28, 1500, 40); // intake ring			 // intake delay
 
+	pros::delay(300);
 	intake.move_voltage(0);
-	
+
 	// 2 quick jorks
 	intake.move_voltage(12000);
 	pros::delay(80);
@@ -659,28 +658,21 @@ void Eclipse::Autonomous_Paths::skills()
 	pros::delay(80);
 	intake.move_voltage(0);
 
-	pros::delay(250);
-
 	driver.next_state(); // score on wallstake
 	pros::delay(250);
-
-	chassis.moveTo(0, 25, 1500, 40);
-	pros::delay(250);
-	chassis.moveTo(0, 30, 1500, 40);
-	pros::delay(250);
-
 	// turn to line of rings and intake
 	chassis.moveTo(0, 14, 1500, 50);
 
 	driver.next_state(); // move lb down
 	r_pid.set_r_constants(2.5, 0, 17);
-	r_pid.rotation_pid(178, 90, 0.7);
+	r_pid.rotation_pid(180, 90, 0.7);
 
 	intake.move_voltage(12000);
 
 	chassis.setPose(0, 0, 0);
-	chassis.moveTo(0, 70, 4000, 50);
-	pros::delay(500);//intake delay
+	chassis.moveTo(0, 46, 1000, 80);
+	chassis.moveTo(0, 60, 2000, 25);
+	pros::delay(250);
 
 	// intake last ring
 	r_pid.set_r_constants(2.5, 0, 17);
@@ -700,7 +692,7 @@ void Eclipse::Autonomous_Paths::skills()
 	pros::delay(150);
 
 	chassis.moveTo(0,-2,1000);
-
+	intake.move_voltage(0);
 	r_pid.set_r_constants(2.5, 0, 17);
 	r_pid.rotation_pid(90, 90, 0.7);
 
@@ -718,6 +710,8 @@ void Eclipse::Autonomous_Paths::skills()
 
 	r_pid.set_r_constants(2.5, 0, 17);
 	r_pid.rotation_pid(0, 90, 0.7);
+
+	intake.move_voltage(0);
 
 	// turn to ring 1
 	r_pid.set_r_constants(2.5, 0, 17);
@@ -737,7 +731,7 @@ void Eclipse::Autonomous_Paths::skills()
 
 	chassis.setPose(0, 0, 0);
 	chassis.moveTo(0, 59, 800);
-	chassis.moveTo(-23.5, 61, 1500, 80); // make sure x is aligned with top ring
+	chassis.moveTo(-20, 61, 1500, 80); // make sure x is aligned with top ring
 	pros::delay(500);
 
 	// intake ring 3 for lb
@@ -746,21 +740,19 @@ void Eclipse::Autonomous_Paths::skills()
 
 	// lb up
 	intake.move_voltage(0);
-	driver.next_state();
-	pros::delay(150); // shorten this delay if the lb moves into pos in time
+	driver.next_state(); // shorten this delay if the lb moves into pos in time
 	intake.move_voltage(12000);
 
 	chassis.setPose(0, 0, 0);
-	chassis.moveTo(0, 15, 1100, 50);
+	chassis.moveTo(0, 5, 1100, 50);
 
 	// intake ring 4 for lb
 
 	chassis.setPose(0, 0, 0);
-	chassis.turnTo(18, -50, 900, true);
-	intake.move_voltage(0);
+	chassis.turnTo(13, -50, 900, true);
 
 	chassis.setPose(0,0,0); 
-	chassis.moveTo(0,-56,1000); //move back
+	chassis.moveTo(0,-48,1000); //move back
 	pros::delay(200);
 	
 	driver.next_state();
@@ -770,11 +762,11 @@ void Eclipse::Autonomous_Paths::skills()
 	intake.move_voltage(12000);
 
 	chassis.setPose(0, 8, 0);
-	chassis.moveTo(0, 30, 1500, 40); // intake ring
-	pros::delay(750);				 // intake delay
+	chassis.moveTo(0, 29, 1500, 40); // intake ring			 // intake delay
 
+	pros::delay(300);
 	intake.move_voltage(0);
-	
+
 	// 2 quick jorks
 	intake.move_voltage(12000);
 	pros::delay(80);
@@ -783,16 +775,8 @@ void Eclipse::Autonomous_Paths::skills()
 	pros::delay(80);
 	intake.move_voltage(0);
 
-	pros::delay(250);
-
 	driver.next_state(); // score on wallstake
 	pros::delay(250);
-
-	chassis.moveTo(0, 25, 1500, 40);
-	pros::delay(250);
-	chassis.moveTo(0, 30, 1500, 40);
-	pros::delay(250);
-
 	// turn to line of rings and intake
 	chassis.moveTo(0, 14, 1500, 50);
 
@@ -803,8 +787,9 @@ void Eclipse::Autonomous_Paths::skills()
 	intake.move_voltage(12000);
 
 	chassis.setPose(0, 0, 0);
-	chassis.moveTo(0, 70, 4000, 50);
-	pros::delay(500);//intake delay
+	chassis.moveTo(0, 50, 1000, 100);
+	chassis.moveTo(0, 60, 2000, 25);
+	pros::delay(250);
 
 	// intake last ring
 	r_pid.set_r_constants(2.5, 0, 17);
@@ -814,7 +799,7 @@ void Eclipse::Autonomous_Paths::skills()
 
 	//unclamp in corner
 	r_pid.set_r_constants(2.5, 0, 17);
-	r_pid.rotation_pid(20, 90, 0.7);
+	r_pid.rotation_pid(17, 90, 0.7);
 
 	chassis.setPose(0,0,0);
 	chassis.moveTo(0,-10,1000);
@@ -827,21 +812,38 @@ void Eclipse::Autonomous_Paths::skills()
 
 	driver.next_state();
 
-	chassis.setPose(0,0,0);
-	chassis.moveTo(0.902, 80.471, 1000);
-	chassis.moveTo(7.111, 95.082, 700);
+	r_pid.set_r_constants(2.5, 0, 17);
+	r_pid.rotation_pid(10, 90, 0.4);
 
-	pros::delay(500);
+	chassis.setPose(0,0,0);
+	chassis.moveTo(0, 80.471, 1000);
+	chassis.moveTo(13, 99.082, 700);
 
 	r_pid.set_r_constants(2.5, 0, 17);
-	r_pid.rotation_pid(-135, 90, 0.7);
+	r_pid.rotation_pid(0, 90, 0.7);
+
+	intake.move_voltage(0);
 
 	chassis.setPose(0,0,0);
-	chassis.moveTo(0,-30, 700);
-	chassis.moveTo(0,-34, 700, 80);
+	chassis.moveTo(0,20, 700);
 
-	clamp.set_value(true);
-	pros::delay(250);
+	r_pid.set_r_constants(2.5, 0, 17);
+	r_pid.rotation_pid(-80, 90, 0.7);
+
+	chassis.setPose(0,0,0);
+	chassis.moveTo(0, 40, 1000);
+	chassis.moveTo(0, -10, 1000);
+
+	r_pid.set_r_constants(2.5, 0, 17);
+	r_pid.rotation_pid(0, 90, 0.7);
+
+	chassis.setPose(0,0,0);
+	chassis.moveTo(0, 5, 1000);
+
+	driver.alliance_stake();
+	pros::delay(600);
+	chassis.moveTo(0, -5, 1000);
+
 }
 
 void Eclipse::Autonomous_Paths::test()

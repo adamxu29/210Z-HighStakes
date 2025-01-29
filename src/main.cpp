@@ -82,8 +82,7 @@ void autonomous(){
 	// Run auton selector for
 	// gui.run_selected_auton();
 
-	// red.right_half_awp();
-	auton.skills();
+	red.left_half_awp();
 
 	// auton.test();
 }
@@ -119,7 +118,7 @@ void opcontrol() {
 		if(tuning){
 			tuner.driver_tuner();
 		}
-		else if(driver.driving){
+		else if(!driver.color_sorting){
 			driver.driver_control();
 		}
 		pros::delay(8);

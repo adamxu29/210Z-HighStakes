@@ -8,7 +8,7 @@ namespace Eclipse{
             bool ratchet_used = false;
         public:
             bool skills = false;
-            bool driving = true;
+            bool color_sorting = false;
 
             void exponential_curve_accelerator();
             void drivetrain_control();

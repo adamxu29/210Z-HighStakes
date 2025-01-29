@@ -94,13 +94,13 @@ void Eclipse::OPControl::lift_intake(){
 
 void Eclipse::OPControl::next_state() {
     if(this-> current_state == 1){
-        driver.driving = false;
+        this->color_sorting = true;
 
         intake.move_voltage(-6000);
         pros::delay(40);
         intake.move_voltage(0);
 
-        driver.driving = true;
+        this->color_sorting = false;
     }
     this->current_state++;
     if (this->current_state > this->num_states - 2) {
@@ -118,14 +118,14 @@ void Eclipse::OPControl::prev_state() {
 }
 
 void Eclipse::OPControl::power_wall_stake(){
-    m_pid.set_constants(3.5, 0.0, 10, 10, 1.5, 5, 500, 127);
+    m_pid.set_constants(3.5, 0.0, 10, 10, 1.5, 5, 200, 127);
 	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 }
 
 void Eclipse::OPControl::control_wall_stake(){
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+    if (controller.get_digital_new_press(this->skills ? pros::E_CONTROLLER_DIGITAL_R2 : pros::E_CONTROLLER_DIGITAL_L1)) {
         driver.next_state();
-    } else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+    } else if (controller.get_digital_new_press(this->skills ? pros::E_CONTROLLER_DIGITAL_R1 : pros::E_CONTROLLER_DIGITAL_L2)) {
         driver.prev_state();
     }
 }

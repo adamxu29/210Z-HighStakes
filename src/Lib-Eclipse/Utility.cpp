@@ -132,11 +132,11 @@ void Utility::sort_red(){
         lv_label_set_text(gui.debug_line_2, buffer);
 
         pros::delay(sort_delay);
-        driver.driving = false;
+        driver.color_sorting = true;
         intake.move_voltage(-1000);
-        pros::delay(75);
+        pros::delay(100);
         intake.move_voltage(12000);
-        driver.driving = true;
+        driver.color_sorting = false;
     }
 }
 // Sort red rings on blue side
@@ -150,11 +150,11 @@ void Utility::sort_blue(){
         lv_label_set_text(gui.debug_line_2, buffer);
 
         pros::delay(sort_delay);
-        driver.driving = false;
+        driver.color_sorting = true;
         intake.move_voltage(-1000);
-        pros::delay(75);
+        pros::delay(1000);
         intake.move_voltage(12000);
-        driver.driving = true;
+        driver.color_sorting = false;
     }
 }
 

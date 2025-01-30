@@ -82,9 +82,9 @@ void autonomous(){
 	// Run auton selector for
 	// gui.run_selected_auton();
 
-	red.left_half_awp();
+	// red.left_half_awp();
 
-	// auton.test();
+	auton.skills();
 }
 
 /**

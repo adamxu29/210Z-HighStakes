@@ -15,7 +15,7 @@ namespace Eclipse{
             void power_intake(int speed);
             
             static const int num_states = 5;
-            double states[num_states] = {-13.5, 11, 28, 155, 185}; 
+            double states[num_states] = {-13.5, 11, 30, 155, 185}; 
             int current_state = 0;
             double target = states[current_state];
 

@@ -417,28 +417,40 @@ void GUI::run_selected_auton(){
             switch(gui.selected_path){
                 case 0:
                     red.solo_awp();
+                    break;
                 case 1:
                     red.left_half_awp();
+                    break;
                 case 2:
                     red.right_half_awp();
+                    break;
                 case 3:
                     red.goal_side_rush();
+                    break;
                 case 5:
                     red.ring_side_rush();
+                    break;
             }
+            break;
         case 1:
             switch(gui.selected_path){
                 case 0:
                     blue.solo_awp();
+                    break;
                 case 1:
                     blue.left_half_awp();
+                    break;
                 case 2:
                     blue.right_half_awp();
+                    break;
                 case 3:
                     blue.goal_side_rush();
+                    break;
                 case 5:
                     blue.ring_side_rush();
+                    break;
             }
+        break;
     }
 }
 

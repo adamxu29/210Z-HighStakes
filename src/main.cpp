@@ -47,13 +47,17 @@ void initialize() {
 		while(util.sorting){
 			if(gui.selected_color == 0){
 				util.sort_red();
+				util.stop_on_red();
 			}
 			else if(gui.selected_color == 1){
 				util.sort_blue();
+				util.stop_on_blue();
 			}
+			
 			pros::delay(8);
 		}
 	});
+
 
 	color.set_led_pwm(0);
 }
@@ -77,14 +81,10 @@ void autonomous(){
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
-	// color.set_led_pwm(50);
+	color.set_led_pwm(50);
 
 	// Run auton selector for
-	// gui.run_selected_auton();
-
-	// red.left_half_awp();
-
-	auton.skills();
+	gui.run_selected_auton();
 }
 
 /**
@@ -108,7 +108,7 @@ void opcontrol() {
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 	util.sorting = true;
-	util.sort_delay = 22;
+	util.sort_delay = 27;
 
 	driver.skills = false; // make true if running skills
 

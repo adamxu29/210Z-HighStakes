@@ -131,6 +131,15 @@ void Eclipse::OPControl::control_wall_stake(){
 }
 
 void Eclipse::OPControl::alliance_stake(){
+    if(this-> current_state == 1){
+        this->color_sorting = true;
+
+        intake.move_voltage(-6000);
+        pros::delay(40);
+        intake.move_voltage(0);
+
+        this->color_sorting = false;
+    }
     this->current_state = this->num_states - 1;
     this->target = states[this->current_state];
 }

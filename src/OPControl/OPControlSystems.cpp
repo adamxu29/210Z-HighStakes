@@ -43,25 +43,27 @@ void Eclipse::OPControl::drivetrain_control(){
     int32_t leftYjoystick  = (controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
     int32_t leftXjoystick  = (controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X));
 
-    int32_t left_power = (rightXjoystick + leftYjoystick);
-    int32_t right_power = (leftYjoystick - rightXjoystick);
+    int32_t left_power = ((rightXjoystick * 0.9) + leftYjoystick);
+    int32_t right_power = (leftYjoystick - (rightXjoystick * 0.9) );
 
     left_drive.move(left_power);
     right_drive.move(right_power);
 }
 
 void Eclipse::OPControl::power_intake(int speed){ // speed in percent
-    if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){
-        intake.move_voltage(12000 * (speed / 100));
-        color.set_led_pwm(50);
-    }
-    else if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L1 : pros::E_CONTROLLER_DIGITAL_R2 /**Skills: L2 */ )){
-        intake.move_voltage(-12000 * (speed / 100));
-        color.set_led_pwm(50);
-    }
-    else{
-        intake.move_voltage(0);
-        color.set_led_pwm(0);
+    if(!driver.color_sorting){
+        if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){
+            intake.move_voltage(12000 * (speed / 100));
+            color.set_led_pwm(50);
+        }
+        else if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L1 : pros::E_CONTROLLER_DIGITAL_R2 /**Skills: L2 */ )){
+            intake.move_voltage(-12000 * (speed / 100));
+            color.set_led_pwm(50);
+        }
+        else{
+            intake.move_voltage(0);
+            color.set_led_pwm(0);
+        }
     }
 }
 
@@ -103,7 +105,7 @@ void Eclipse::OPControl::next_state() {
         this->color_sorting = false;
     }
     this->current_state++;
-    if (this->current_state > this->num_states - 2) {
+    if (this->current_state > this->num_states - 1) {
         this->current_state = 0;
     }
     this->target = states[this->current_state];
@@ -112,7 +114,7 @@ void Eclipse::OPControl::next_state() {
 void Eclipse::OPControl::prev_state() {
 	this->current_state--;
 	if (this->current_state < 0) {
-		this->current_state = this->num_states - 2;
+		this->current_state = this->num_states - 1;
 	}
 	this->target = states[this->current_state];
 }
@@ -129,6 +131,7 @@ void Eclipse::OPControl::control_wall_stake(){
         driver.prev_state();
     }
 }
+
 
 void Eclipse::OPControl::alliance_stake(){
     if(this-> current_state == 1){

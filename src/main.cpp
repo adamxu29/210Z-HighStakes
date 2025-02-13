@@ -35,6 +35,9 @@ void initialize() {
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
+	color.set_led_pwm(0);
+	color.set_integration_time(10);
+
 	pros::Task wall_stake_control([]{
 		while (true) {
 			driver.control_wall_stake();
@@ -44,22 +47,42 @@ void initialize() {
 	});
 
 	pros::Task color_sorting([]{
-		while(util.sorting){
-			if(gui.selected_color == 0){
-				util.sort_red();
-				util.stop_on_red();
+		int stop_delay_counter = 0;
+		while(true){
+			if(util.sorting){
+				if(gui.selected_color == 0){
+					util.sort_red();
+				}
+				else if(gui.selected_color == 1){
+					util.sort_blue();
+				}
 			}
-			else if(gui.selected_color == 1){
-				util.sort_blue();
-				util.stop_on_blue();
+			else{
+				stop_delay_counter++;
+				if(stop_delay_counter == 50){
+					stop_delay_counter = 0;
+					util.sorting = true;
+				}
+			}
+			pros::delay(8);
+		}
+	});
+
+	pros::Task stop([]{
+		while(true){
+			if(util.stop_on_color){
+				if(gui.selected_color == 0){
+					util.stop_on_red();
+				}
+				else if(gui.selected_color == 1){
+					util.stop_on_blue();
+				}
 			}
 			
 			pros::delay(8);
 		}
 	});
 
-
-	color.set_led_pwm(0);
 }
 
 void disabled() {
@@ -71,20 +94,22 @@ void competition_initialize() {
 }
 char buffer[300];
 void autonomous(){
+	util.stop_on_color = false;
 	t_pid.set_drive_constants(3.25, 0.75, 600);
 	// t_pid constants: kp: 5, kd: 15
 	// r_pid constants: kd: 2.5, kd: 15
-	
+
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
-	color.set_led_pwm(50);
+	color.set_led_pwm(100);
 
 	// Run auton selector for
 	gui.run_selected_auton();
+	// auton.skills();
+	// auton.test();
 }
 
 /**
@@ -108,7 +133,8 @@ void opcontrol() {
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 	util.sorting = true;
-	util.sort_delay = 27;
+	util.sort_delay = 110;
+	util.stop_on_color = false;
 
 	driver.skills = false; // make true if running skills
 
@@ -118,7 +144,7 @@ void opcontrol() {
 		if(tuning){
 			tuner.driver_tuner();
 		}
-		else if(!driver.color_sorting){
+		else{
 			driver.driver_control();
 		}
 		pros::delay(8);

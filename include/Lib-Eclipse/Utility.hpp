@@ -28,8 +28,8 @@ namespace Eclipse
             int red_max = 20;
             int red_min = 0;
             int blue_max = 225;
-            int blue_min = 200;
-            int sort_delay = 27;
+            int blue_min = 190;
+            int sort_delay = 110;
 
             bool sorting = true;
             bool stop_on_color = false;

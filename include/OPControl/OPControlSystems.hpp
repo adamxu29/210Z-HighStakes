@@ -13,9 +13,9 @@ namespace Eclipse{
             void exponential_curve_accelerator();
             void drivetrain_control();
             void power_intake(int speed);
-            
+
             static const int num_states = 5;
-            double states[num_states] = {-13.5, 11, 30, 150, 185}; 
+            double states[num_states] = {-13.5, 15, 31, 145, 185}; 
             int current_state = 0;
             double target = states[current_state];
 

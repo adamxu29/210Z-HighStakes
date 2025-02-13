@@ -427,7 +427,7 @@ void GUI::run_selected_auton(){
                 case 3:
                     red.goal_side_rush();
                     break;
-                case 5:
+                case 4:
                     red.ring_side_rush();
                     break;
             }
@@ -446,11 +446,15 @@ void GUI::run_selected_auton(){
                 case 3:
                     blue.goal_side_rush();
                     break;
-                case 5:
+                case 4:
                     blue.ring_side_rush();
                     break;
             }
-        break;
+            break;
+
+        default:
+            auton.test();
+            break;
     }
 }
 

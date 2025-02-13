@@ -133,10 +133,13 @@ void Utility::sort_red(){
 
         pros::delay(sort_delay);
         driver.color_sorting = true;
+
         intake.move_voltage(-1000);
         pros::delay(100);
         intake.move_voltage(12000);
+
         driver.color_sorting = false;
+        util.sorting = false;
     }
 }
 // Sort red rings on blue side
@@ -151,29 +154,36 @@ void Utility::sort_blue(){
 
         pros::delay(sort_delay);
         driver.color_sorting = true;
+
         intake.move_voltage(-1000);
         pros::delay(100);
         intake.move_voltage(12000);
+
         driver.color_sorting = false;
+        util.sorting = false;
     }
 }
 
 void Utility::stop_on_red(){
-    if(util.stop_on_color && (color.get_hue() > this->red_min && color.get_hue() < this->red_max)){
+    if(color.get_hue() > this->red_min && color.get_hue() < this->red_max){
         char buffer[300];
         sprintf(buffer, "Red Ring Stopped");
         lv_label_set_text(gui.debug_line_4, buffer);
-
-       intake.brake();
+        
+        intake.move_voltage(-1000);
+        pros::delay(150);
+        intake.brake();
     }
 }
 
 void Utility::stop_on_blue(){
-    if(util.stop_on_color && (color.get_hue() > this->blue_min && color.get_hue() < this->blue_max)){
+    if((color.get_hue() > this->blue_min) && (color.get_hue() < this->blue_max)){
         char buffer[300];
         sprintf(buffer, "Blue Ring Stopped");
         lv_label_set_text(gui.debug_line_4, buffer);
 
+        intake.move_voltage(-1000);
+        pros::delay(150);
         intake.brake();
     }
 }

@@ -20,7 +20,7 @@ pros::Optical color(2);
 
 pros::ADIDigitalOut clamp('g');
 pros::ADIDigitalOut doinker('d');
-pros::ADIDigitalOut goal_rush_release('c');
+pros::ADIDigitalOut goal_rush_release('h');
 pros::ADIDigitalOut ring_rush('a');
 pros::ADIDigitalOut intake_lift('b');
 

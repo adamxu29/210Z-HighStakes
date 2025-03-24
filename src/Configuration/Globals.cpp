@@ -19,17 +19,15 @@ pros::Rotation wall_stake_rotation_sensor(9);
 pros::Optical color(2);
 
 pros::ADIDigitalOut clamp('g');
-pros::ADIDigitalOut doinker('d');
+pros::ADIDigitalOut right_doinker('d');
+pros::ADIDigitalOut left_doinker('a');
 pros::ADIDigitalOut goal_rush_release('h');
-pros::ADIDigitalOut ring_rush('a');
 pros::ADIDigitalOut intake_lift('b');
 
 pros::ADIAnalogIn line('f');
 
 pros::IMU imu1(14);
 pros::IMU imu2(17);
-
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_rotation_sensor, 2, -5.50);
 
 Utility util;
 OPControl driver;
@@ -39,49 +37,10 @@ Translation_PID t_pid;
 Rotation_PID r_pid;
 Curve_PID c_pid;
 PID m_pid;
-// Odom odom;
+Odom odom;
 
 Autonomous_Paths auton;
 Autonomous_Paths::Red red;
 Autonomous_Paths::Blue blue;
 
 GUI gui;
-
-
-lemlib::Drivetrain_t drivetrain {
-    &left_drive, // left drivetrain motors
-    &right_drive, // right drivetrain motors
-    11, // track width in inches
-    3.25, // wheel diameter
-    450 // wheel rpm
-};
-
-lemlib::OdomSensors_t sensors {
-    nullptr, // vertical tracking wheel 1 (motor)
-    nullptr, // vertical tracking wheel 2 (motor)
-    &horizontal_tracking_wheel, // horizontal tracking wheel 1 (none)
-    nullptr, // we don't have a second tracking wheel, so we set it to nullptr
-    &imu2, // inertial sensor
-};
-
-lemlib::ChassisController_t lateralController {
-    8.5, // kP
-    28, // kD
-    1, // smallErrorRange
-    100, // smallErrorTimeout
-    3, // largeErrorRange
-    500, // largeErrorTimeout
-    5 // slew rate
-};
-
-lemlib::ChassisController_t angularController {
-    4.3, // kP <- default: 4
-    40, // kD <- default: 40
-    1, // smallErrorRange
-    100, // smallErrorTimeout
-    3, // largeErrorRange
-    750, // largeErrorTimeout <- 500
-    0 // slew rate
-};
-
-lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);

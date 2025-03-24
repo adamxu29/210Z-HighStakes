@@ -17,16 +17,7 @@ namespace Eclipse{
             int t_failsafe;
             int t_max_speed;
 
-            double wheel_diameter = 0;
-            double gear_ratio = 0;
-            double motor_cartridge = 0;
-            double circumference = 0;
-            double tpr = 0;
-            double tpi = 0;
-
             Translation_PID();
-
-            void set_drive_constants(const double dt_wheel_diameter, const double dt_gear_ratio, const double dt_motor_cartridge);
 
             void set_t_constants(const double kp, const double ki, const double kd, const double heading_kp);
 

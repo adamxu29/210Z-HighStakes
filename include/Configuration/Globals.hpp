@@ -1,6 +1,4 @@
-#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
-#include "lemlib/api.hpp" // IWYU pragma: keep
 
 // controller
 extern pros::Controller controller;
@@ -17,9 +15,9 @@ extern pros::Rotation wall_stake_rotation_sensor;
 extern pros::Optical color;
 
 extern pros::ADIDigitalOut clamp;
-extern pros::ADIDigitalOut doinker;
+extern pros::ADIDigitalOut right_doinker;
+extern pros::ADIDigitalOut left_doinker;
 extern pros::ADIDigitalOut goal_rush_release;
-extern pros::ADIDigitalOut ring_rush;
 extern pros::ADIDigitalOut intake_lift;
 
 extern pros::ADIAnalogIn line;
@@ -35,7 +33,7 @@ extern Eclipse::Translation_PID t_pid;
 extern Eclipse::Rotation_PID r_pid;
 extern Eclipse::Curve_PID c_pid;
 extern Eclipse::PID m_pid;
-// extern Eclipse::Odom odom;
+extern Eclipse::Odom odom;
 
 extern Eclipse::Autonomous_Paths auton;
 extern Eclipse::Autonomous_Paths::Red red;
@@ -43,9 +41,4 @@ extern Eclipse::Autonomous_Paths::Blue blue;
 
 extern Eclipse::GUI gui;
 
-
 extern bool skills;
-
-extern lemlib::TrackingWheel horizontal_tracking_wheel;
-
-extern lemlib::Chassis chassis;

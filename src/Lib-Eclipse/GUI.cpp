@@ -1,4 +1,5 @@
 #include "main.h"
+#include "cmath"
 
 using namespace Eclipse;
 
@@ -41,7 +42,7 @@ void GUI::initialize_styles() {
     lv_style_copy(&style_pressed_blue_btn, &style_button_base);
     style_pressed_blue_btn.body.main_color = LV_COLOR_MAKE(0x00, 0x7A, 0xFF);
     style_pressed_blue_btn.body.grad_color = LV_COLOR_MAKE(0x00, 0x7A, 0xFF);
-    style_pressed_blue_btn.body.opa = LV_OPA_60;
+    style_pressed_blue_btn.body.opa = LV_OPA_40;
 
     lv_style_copy(&style_red_btn, &style_button_base);
     style_red_btn.body.main_color = LV_COLOR_MAKE(0xFF, 0x3B, 0x30);
@@ -50,7 +51,7 @@ void GUI::initialize_styles() {
     lv_style_copy(&style_pressed_red_btn, &style_button_base);
     style_pressed_red_btn.body.main_color = LV_COLOR_MAKE(0xFF, 0x3B, 0x30);
     style_pressed_red_btn.body.grad_color = LV_COLOR_MAKE(0xFF, 0x3B, 0x30);
-    style_pressed_red_btn.body.opa = LV_OPA_60;
+    style_pressed_red_btn.body.opa = LV_OPA_40;
 
     lv_style_copy(&style_purple_btn, &style_button_base);
     style_purple_btn.body.main_color = LV_COLOR_MAKE(0x3F, 0x1D, 0x7A);
@@ -59,7 +60,7 @@ void GUI::initialize_styles() {
     lv_style_copy(&style_pressed_purple_btn, &style_button_base);
     style_pressed_purple_btn.body.main_color = LV_COLOR_MAKE(0x2F, 0x0D, 0x6A);
     style_pressed_purple_btn.body.grad_color = LV_COLOR_MAKE(0x2F, 0x0D, 0x6A);
-    style_pressed_purple_btn.body.opa = LV_OPA_70;
+    style_pressed_purple_btn.body.opa = LV_OPA_40;
 }
 
 // Initialize actions
@@ -461,7 +462,7 @@ void GUI::run_selected_auton(){
 void GUI::update_sensors(){
     char buffer[300];
 
-    sprintf(buffer, "X: %.2f Y: %.2f Heading: %.2f°", 0.0, 0.0, util.get_heading());
+    sprintf(buffer, "X: %.2f Y: %.2f Heading: %.2f°", util.get_robot_x(), util.get_robot_y(), robot_theta * 180 / M_PI);
     lv_label_set_text(gui.position_readings, buffer);
 
     sprintf(buffer, "FL: %.2f ML: %.2f BL: %.2f", left_drive.get_positions()[0], left_drive.get_positions()[1], left_drive.get_positions()[2]);

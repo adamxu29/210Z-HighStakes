@@ -2,10 +2,9 @@ namespace Eclipse{
     class OPControl{
         private:
             bool clamping = false;
-            bool doinker_down = false;
-            bool ring_rush_down = false;
+            bool right_doinker_down = false;
+            bool left_doinker_down = false;
             bool intake_up = false;
-            bool ratchet_used = false;
         public:
             bool skills = false;
             bool color_sorting = false;
@@ -13,9 +12,11 @@ namespace Eclipse{
             void exponential_curve_accelerator();
             void drivetrain_control();
             void power_intake(int speed);
-
+            void manual_wall_stake();
+            
+            bool wall_stake_on = true;
             static const int num_states = 5;
-            double states[num_states] = {-13.5, 15, 31, 145, 185}; 
+            double states[num_states] = {-13.5, 18, 32, 145, 230}; 
             int current_state = 0;
             double target = states[current_state];
 
@@ -24,11 +25,11 @@ namespace Eclipse{
             void power_wall_stake();
             void control_wall_stake();
             void alliance_stake();
-
-            void manual_wall_stake(int speed);
+            void score_alliance_stake();
 
             void activate_clamp();
-            void activate_doinker();
+            void activate_right_doinker();
+            void activate_left_doinker();
             void activate_ring_rush();
             void lift_intake();
 

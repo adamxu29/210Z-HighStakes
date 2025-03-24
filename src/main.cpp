@@ -1,13 +1,4 @@
-#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
-#include "lemlib/api.hpp" // IWYU pragma: keep
-
-using namespace Eclipse;
-
-// Eclipse::RobotConfig RobotConfig(
-// 	{-6, 5, 4}, // Left motor ports
-
-// 	{-10, -9, 8}, // Right motor ports
 
 // 	{12}, // intake ports
 
@@ -26,22 +17,36 @@ void initialize() {
 	gui.initialize_styles();
 	gui.initialize_objects();
 
-	gui.display_home();
+	gui.display_debug_terminal();
+	
+	util.set_drive_constants(3.25, 0.75, 600);
+
+	odom.set_horizontal_tracker_specs(3.25, 1.738);
+	odom.set_vertical_tracker_specs(3.25, -0.904);
+
+	// -2.73, 1.42
 
 	imu1.tare_rotation();
 	imu2.tare_rotation();
-	chassis.calibrate();
+
 	wall_stake_rotation_sensor.set_position(-1350);
+	horizontal_rotation_sensor.reset_position();
+
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 
 	color.set_led_pwm(0);
 	color.set_integration_time(10);
 
+	util.set_robot_position(0.0, 0.0);
+
+	pros::delay(3000);
+	controller.rumble(".");
+
 	pros::Task wall_stake_control([]{
-		while (true) {
-			driver.control_wall_stake();
+		while (driver.wall_stake_on) {
 			driver.power_wall_stake();
+			driver.control_wall_stake();
 			pros::delay(8);
 		}
 	});
@@ -59,7 +64,7 @@ void initialize() {
 			}
 			else{
 				stop_delay_counter++;
-				if(stop_delay_counter == 50){
+				if(stop_delay_counter == 25){
 					stop_delay_counter = 0;
 					util.sorting = true;
 				}
@@ -92,10 +97,10 @@ void disabled() {
 void competition_initialize() {
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
+
 char buffer[300];
 void autonomous(){
 	util.stop_on_color = false;
-	t_pid.set_drive_constants(3.25, 0.75, 600);
 	// t_pid constants: kp: 5, kd: 15
 	// r_pid constants: kd: 2.5, kd: 15
 
@@ -104,12 +109,12 @@ void autonomous(){
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
-	color.set_led_pwm(100);
+	color.set_led_pwm(50);
 
 	// Run auton selector for
+	
 	gui.run_selected_auton();
 	// auton.skills();
-	// auton.test();
 }
 
 /**
@@ -133,8 +138,8 @@ void opcontrol() {
 	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 	util.sorting = true;
-	util.sort_delay = 110;
 	util.stop_on_color = false;
+	gui.selected_color = 0;
 
 	driver.skills = false; // make true if running skills
 

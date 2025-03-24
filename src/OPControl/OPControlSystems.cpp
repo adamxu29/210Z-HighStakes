@@ -27,10 +27,10 @@ void Eclipse::OPControl::exponential_curve_accelerator(){
 
     double turn_val = joystick_accelerator(turningRed, rightXjoystick, turnCurve);
     double forward_val = joystick_accelerator(forwardRed, leftYjoystick, forwardCurve);
-    double turnVoltage = turn_val * (12000.0 / 127); 
+    double turnVoltage = turn_val * (12000.0 / 127) * .9; 
     double forwardVoltage = forward_val * (12000.0 / 127);
-    std:: cout << turnVoltage << std::endl;
-    std:: cout <<"linear: " << forwardVoltage << std::endl;
+    // std:: cout << turnVoltage << std::endl;
+    // std:: cout <<"linear: " << forwardVoltage << std::endl;
     double left =  forwardVoltage + turnVoltage;
     double right = forwardVoltage - turnVoltage;
     left_drive.move_voltage(left);
@@ -67,10 +67,23 @@ void Eclipse::OPControl::power_intake(int speed){ // speed in percent
     }
 }
 
-void Eclipse::OPControl::manual_wall_stake(int speed){
+void Eclipse::OPControl::manual_wall_stake(){
     // if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(12000 * speed / 100); }
     // else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(-12000 * speed / 100); }
     // else{ wall_stake.move_velocity(0); }
+
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(12000); }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(-12000); }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){ 
+        m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
+	    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15); 
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){ 
+        m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
+	    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 34); 
+    }
+    else{ wall_stake.move_voltage(0); }
+
 }
 
 void Eclipse::OPControl::activate_clamp(){
@@ -80,10 +93,17 @@ void Eclipse::OPControl::activate_clamp(){
     }
 }
 
-void Eclipse::OPControl::activate_doinker(){
-    if(controller.get_digital_new_press( this->skills ? pros::E_CONTROLLER_DIGITAL_Y : pros::E_CONTROLLER_DIGITAL_B/**Skills: RIGHT */)){
-        this->doinker_down = !this->doinker_down;
-        doinker.set_value(this->doinker_down);
+void Eclipse::OPControl::activate_right_doinker(){
+    if(controller.get_digital_new_press( this->skills ? pros::E_CONTROLLER_DIGITAL_RIGHT : pros::E_CONTROLLER_DIGITAL_B/**Skills: RIGHT */)){
+        this->right_doinker_down = !this->right_doinker_down;
+        right_doinker.set_value(this->right_doinker_down);
+    }
+}
+
+void Eclipse::OPControl::activate_left_doinker(){
+    if(controller.get_digital_new_press( this->skills ? pros::E_CONTROLLER_DIGITAL_UP : pros::E_CONTROLLER_DIGITAL_RIGHT/**Skills: RIGHT */)){
+        this->left_doinker_down = !this->left_doinker_down;
+        left_doinker.set_value(this->left_doinker_down);
     }
 }
 
@@ -99,13 +119,13 @@ void Eclipse::OPControl::next_state() {
         this->color_sorting = true;
 
         intake.move_voltage(-6000);
-        pros::delay(40);
+        pros::delay(35);
         intake.move_voltage(0);
 
         this->color_sorting = false;
     }
     this->current_state++;
-    if (this->current_state > this->num_states - 1) {
+    if (this->skills ? this->current_state > this->num_states - 2 : this->current_state > this->num_states - 1) {
         this->current_state = 0;
     }
     this->target = states[this->current_state];
@@ -114,13 +134,13 @@ void Eclipse::OPControl::next_state() {
 void Eclipse::OPControl::prev_state() {
 	this->current_state--;
 	if (this->current_state < 0) {
-		this->current_state = this->num_states - 1;
+		this->skills ? this->current_state = this->num_states - 2 : this->current_state = this->num_states - 1;
 	}
 	this->target = states[this->current_state];
 }
 
 void Eclipse::OPControl::power_wall_stake(){
-    m_pid.set_constants(3.5, 0.0, 10, 10, 1.5, 5, 200, 127);
+    m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
 	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 }
 
@@ -131,7 +151,6 @@ void Eclipse::OPControl::control_wall_stake(){
         driver.prev_state();
     }
 }
-
 
 void Eclipse::OPControl::alliance_stake(){
     if(this-> current_state == 1){
@@ -144,18 +163,25 @@ void Eclipse::OPControl::alliance_stake(){
         this->color_sorting = false;
     }
     this->current_state = this->num_states - 1;
-    this->target = states[this->current_state];
+    this->target = 180;
+}
+
+void Eclipse::OPControl::score_alliance_stake(){
+    if(controller.get_digital_new_press(this->skills ? pros::E_CONTROLLER_DIGITAL_B : pros::E_CONTROLLER_DIGITAL_UP)){
+        driver.alliance_stake();
+    }
 }
 
 void Eclipse::OPControl::driver_control(){
+    odom.update_position();
+    
     this->skills ? driver.exponential_curve_accelerator() : driver.drivetrain_control();
     driver.power_intake(100);
-    // driver.manual_wall_stake(100);
+    // driver.manual_wall_stake(50);
 
     driver.activate_clamp();
-    driver.activate_doinker();
+    driver.score_alliance_stake();
+    driver.activate_right_doinker();
+    driver.activate_left_doinker();
     driver.lift_intake();
-
-    gui.update_sensors();
-    gui.update_temps();
 }

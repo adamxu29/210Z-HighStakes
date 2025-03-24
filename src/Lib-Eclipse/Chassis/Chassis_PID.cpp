@@ -7,13 +7,6 @@ using namespace Eclipse;
 
 // maybe add slew
 
-void Eclipse::Translation_PID::set_drive_constants(const double dt_wheel_diameter, const double dt_gear_ratio, const double dt_motor_cartridge)
-{
-    t_pid.wheel_diameter = dt_wheel_diameter;
-    t_pid.gear_ratio = dt_gear_ratio;
-    t_pid.motor_cartridge = dt_motor_cartridge;
-}
-
 void Eclipse::Translation_PID::set_t_constants(const double kp, const double ki, const double kd, const double heading_kp)
 {
     t_pid.t_kp = kp;
@@ -50,7 +43,7 @@ Eclipse::Rotation_PID::Rotation_PID()
 
 Eclipse::Curve_PID::Curve_PID()
 {
-    c_pid.c_tolerance = 5;
+    c_pid.c_tolerance = 4;
     c_pid.c_error_threshold = 7;
 }
 
@@ -109,7 +102,7 @@ double Eclipse::Translation_PID::compute_t(double current_pos, double target)
 
 double Eclipse::Rotation_PID::compute_r(double current_pos, double theta)
 {
-    r_pid.r_error = util.get_min_angle(current_pos, theta);
+    r_pid.r_error = util.get_min_error(current_pos, theta);
     r_pid.r_derivative = r_pid.r_error - r_pid.r_prev_error;
 
     if (r_pid.r_ki != 0)
@@ -136,7 +129,7 @@ double Eclipse::Rotation_PID::compute_r(double current_pos, double theta)
 
 double Eclipse::Curve_PID::compute_c(double current_pos, double theta)
 {
-    c_pid.c_error = util.get_min_angle(current_pos, theta);
+    c_pid.c_error = util.get_min_error(current_pos, theta);
     c_pid.c_derivative = c_pid.c_error - c_pid.c_prev_error;
 
     if (c_pid.c_ki != 0){ c_pid.c_integral += c_pid.c_error; }
@@ -144,9 +137,17 @@ double Eclipse::Curve_PID::compute_c(double current_pos, double theta)
     if (util.sign(c_pid.c_error) != util.sign(c_pid.c_prev_error)){ c_pid.c_integral = 0; }
 
     double power = (c_pid.c_error * c_pid.c_kp) + (c_pid.c_integral * c_pid.c_ki) + (c_pid.c_derivative * c_pid.c_kd);
-    if (power * (12000.0 / 127) > c_pid.c_max_speed * (12000.0 / 127)){ power = c_pid.c_max_speed; }
-    if (power * (12000.0 / 127) < -c_pid.c_max_speed * (12000.0 / 127)){ power = -c_pid.c_max_speed; }
 
+    std::cout << "error" << c_pid.c_error << std::endl;
+
+    if (power * (12000.0 / 127) > c_pid.c_max_speed * (12000.0 / 127)){
+        std::cout << "max: " << c_pid.c_max_speed << std::endl;
+        power = c_pid.c_max_speed;
+         
+    }
+    if (power * (12000.0 / 127) < -c_pid.c_max_speed * (12000.0 / 127)){ power = -c_pid.c_max_speed; }
+    
+    // std::cout << "power" << power << std::endl;
     c_pid.c_prev_error = c_pid.c_error;
 
     return power;
@@ -159,19 +160,16 @@ void Eclipse::Translation_PID::translation_pid(double target, double max_speed, 
 
     double theta = util.get_heading();
 
-    t_pid.circumference = wheel_diameter * M_PI;
     t_pid.t_max_speed = max_speed;
-    t_pid.tpr = (70.0 * (3600.0 / t_pid.motor_cartridge) * t_pid.gear_ratio);
-    t_pid.tpi = (t_pid.tpr / t_pid.circumference);
-    target *= t_pid.tpi;
+    target *= util.tpi;
     double local_timer = 0;
 
     while (true)
     {
-        double current_position = util.get_position();
+        double current_position = util.get_position() * odom.vertical_wheel_diameter * M_PI / 360;
  
         double voltage = t_pid.compute_t(current_position, target);
-        double heading_correction = util.get_min_angle(util.get_heading(), theta) * t_pid.t_heading_kp;
+        double heading_correction = util.get_min_error(util.get_heading(), theta) * t_pid.t_heading_kp;
 
         std::cout << "average pos" << current_position << std::endl;
         std::cout << "output" << voltage << std::endl;
@@ -288,19 +286,18 @@ void Eclipse::Rotation_PID::rotation_pid(double theta, double max_speed, double 
 
 void Eclipse::Curve_PID::curve_pid(double theta, double max_speed, double time_out, double curve_damper, bool backwards)
 {
-    util.reset_position();
     c_pid.reset_c_variables();
 
-    double target_position = theta;
     double local_timer = 0;
-    r_pid.r_max_speed = max_speed;
+    c_pid.c_max_speed = max_speed;
+    c_turn_right = false;
 
     while (true)
-    {
+    {   
         double current_position = util.get_heading();
         double voltage = c_pid.compute_c(current_position, theta);
 
-        if (c_pid.c_error < 0){
+        if (c_pid.c_error > 0){
             c_pid.c_turn_right = true;
         }
 

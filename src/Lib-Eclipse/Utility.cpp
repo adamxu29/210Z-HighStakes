@@ -1,4 +1,5 @@
 #include "main.h"
+#include <cmath>
 
 using namespace Eclipse;
 
@@ -65,12 +66,19 @@ using namespace Eclipse;
 
 // sensing
 
-// double Utility::get_robot_x(){ return robot_x; }
-// double Utility::get_robot_y(){ return robot_y; }
-// void Utility::set_robot_position(double x, double y){
-//     robot_x = x;
-//     robot_y = y;
-// }
+double Utility::get_robot_x(){ return robot_x; }
+double Utility::get_robot_y(){ return robot_y; }
+void Utility::set_robot_position(double x, double y){
+    robot_x = x;
+    robot_y = y;
+}
+
+void Eclipse::Utility::set_drive_constants(const double dt_wheel_diameter, const double dt_gear_ratio, const double dt_motor_cartridge)
+{
+    this->wheel_diameter = dt_wheel_diameter;
+    this->gear_ratio = dt_gear_ratio;
+    this->motor_cartridge = dt_motor_cartridge;
+}
 
 double Utility::get_position()
 {
@@ -85,6 +93,12 @@ double Utility::get_position()
 
 double Utility::get_drive_temp(){
     return (left_drive.get_temperatures()[0] + left_drive.get_temperatures()[1] + left_drive.get_temperatures()[2] + right_drive.get_temperatures()[0] + right_drive.get_temperatures()[1] + right_drive.get_temperatures()[2]) / 6.0;
+}
+
+void Utility::set_tpi(){
+    this->circumference = this->wheel_diameter * M_PI;
+    
+    this->tpi = (50 * (3600 / this->motor_cartridge) * this->gear_ratio) / this->circumference;
 }
 
 // double Utility::get_wall_stake_position(){
@@ -199,7 +213,20 @@ int Utility::sign(double num)
     return (num > 0) ? 1 : ((num < 0) ? 0 : -1);
 }
 
-double Eclipse::Utility::get_min_angle(float angle1, float angle2)
+double Eclipse::Utility::get_min_angle(float angle){
+    float theta = fmod(angle, 360);
+
+    while(theta < 0){
+        theta += 360;
+    }
+    while(theta > 0){
+        theta -= 360;
+    }
+
+    return theta;
+}
+
+double Eclipse::Utility::get_min_error(float angle1, float angle2)
 {
     angle1 = fmod(angle1, 360);
     angle2 = fmod(angle2, 360);

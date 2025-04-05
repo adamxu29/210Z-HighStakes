@@ -60,7 +60,7 @@ void GUI::initialize_styles() {
     lv_style_copy(&style_pressed_purple_btn, &style_button_base);
     style_pressed_purple_btn.body.main_color = LV_COLOR_MAKE(0x2F, 0x0D, 0x6A);
     style_pressed_purple_btn.body.grad_color = LV_COLOR_MAKE(0x2F, 0x0D, 0x6A);
-    style_pressed_purple_btn.body.opa = LV_OPA_40;
+    style_pressed_purple_btn.body.opa = LV_OPA_30;
 }
 
 // Initialize actions
@@ -76,6 +76,11 @@ lv_res_t GUI::auton_selector_click(lv_obj_t *btn) {
 
 lv_res_t GUI::sensors_click(lv_obj_t *btn) {
     gui.display_sensors();
+    return LV_RES_OK;
+}
+
+lv_res_t GUI::match_checklist_click(lv_obj_t *btn) {
+    gui.display_match_checklist();
     return LV_RES_OK;
 }
 
@@ -153,7 +158,7 @@ void GUI::initialize_objects() {
         lv_btn_set_style(gui.auton_home_btn, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
         lv_btn_set_action(gui.auton_home_btn, LV_BTN_ACTION_CLICK, gui.auton_selector_click);
         lv_obj_set_size(gui.auton_home_btn, 140, 30);
-        lv_obj_align(gui.auton_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 50);
+        lv_obj_align(gui.auton_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 22);
         lv_label_set_text(lv_label_create(gui.auton_home_btn, NULL), "Auton Selector");
     
     gui.sensors_home_btn = lv_btn_create(gui.home_screen, NULL);
@@ -161,15 +166,23 @@ void GUI::initialize_objects() {
         lv_btn_set_style(gui.sensors_home_btn, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
         lv_btn_set_action(gui.sensors_home_btn, LV_BTN_ACTION_CLICK, gui.sensors_click);
         lv_obj_set_size(gui.sensors_home_btn, 140, 30);
-        lv_obj_align(gui.sensors_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 105);
+        lv_obj_align(gui.sensors_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 77);
         lv_label_set_text(lv_label_create(gui.sensors_home_btn, NULL), "Sensors");
+    
+    gui.match_home_btn = lv_btn_create(gui.home_screen, NULL);
+        lv_btn_set_style(gui.match_home_btn, LV_BTN_STYLE_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.match_home_btn, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_action(gui.match_home_btn, LV_BTN_ACTION_CLICK, gui.match_checklist_click);
+        lv_obj_set_size(gui.match_home_btn, 140, 30);
+        lv_obj_align(gui.match_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 132);
+        lv_label_set_text(lv_label_create(gui.match_home_btn, NULL), "Match Checklist");
 
     gui.debug_home_btn = lv_btn_create(gui.home_screen, NULL);
         lv_btn_set_style(gui.debug_home_btn, LV_BTN_STYLE_REL, &gui.style_purple_btn);
         lv_btn_set_style(gui.debug_home_btn, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
         lv_btn_set_action(gui.debug_home_btn, LV_BTN_ACTION_CLICK, gui.debug_terminal_click);
         lv_obj_set_size(gui.debug_home_btn, 140, 30);
-        lv_obj_align(gui.debug_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 160);
+        lv_obj_align(gui.debug_home_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 290, 187);
         lv_label_set_text(lv_label_create(gui.debug_home_btn, NULL), "Debug Terminal");
 
     // Initialize Autonomous Selector Screen and its objects
@@ -328,6 +341,47 @@ void GUI::initialize_objects() {
         lv_obj_align(gui.sensor_return_home, NULL, LV_ALIGN_IN_TOP_LEFT, 440, 10);
         lv_label_set_text(lv_label_create(gui.sensor_return_home, NULL), SYMBOL_HOME);
 
+    // Initialize Match Screen and its objects
+    gui.match_screen = lv_obj_create(NULL, NULL);
+    lv_obj_set_style(match_screen, &style_screen_bg);
+
+    gui.match_title = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.match_title, &gui.style_title);
+        lv_obj_align(gui.match_title, NULL, LV_ALIGN_IN_TOP_LEFT, 178, 15);
+        lv_label_set_text(gui.match_title, "Match Checklist");
+    gui.match_position_readings = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.match_position_readings, &gui.style_text);
+        lv_obj_align(gui.match_position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
+        lv_label_set_text(gui.match_position_readings, "X: 0.0 Y: 0.0 Heading: 0.0°");
+    gui.battery_level = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.battery_level, &gui.style_text);
+        lv_obj_align(gui.battery_level, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
+        lv_label_set_text(gui.battery_level, "Battery Level: 0.0%");
+    gui.elapsed_time = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.elapsed_time, &gui.style_text);
+        lv_obj_align(gui.elapsed_time, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_label_set_text(gui.elapsed_time, "Startup Time: 0ms");
+    gui.selected_auton = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.selected_auton, &gui.style_text);
+        lv_obj_align(gui.selected_auton, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
+        lv_label_set_text(gui.selected_auton, "Selected Auton: None None");
+    gui.radio_status = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.radio_status, &gui.style_text);
+        lv_obj_align(gui.radio_status, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 118);
+        lv_label_set_text(gui.radio_status, "Radio Status: Hawk Tuah");
+    gui.competition_status = lv_label_create(gui.match_screen, NULL);
+        lv_label_set_style(gui.competition_status, &gui.style_text);
+        lv_obj_align(gui.competition_status, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 135);
+        lv_label_set_text(gui.competition_status, "Competition Status: Hawk Tuah");
+    gui.match_return_home = lv_btn_create(gui.match_screen, NULL);
+        lv_btn_set_style(gui.match_return_home, LV_BTN_STYLE_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.match_return_home, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_action(gui.match_return_home, LV_BTN_ACTION_CLICK, gui.return_home_click);
+        lv_obj_set_size(gui.match_return_home, 30, 30);
+        lv_obj_align(gui.match_return_home, NULL, LV_ALIGN_IN_TOP_LEFT, 440, 10);
+        // Return Home Button
+        lv_label_set_text(lv_label_create(gui.match_return_home, NULL), SYMBOL_HOME);
+
     // Initialize Debug Terminal Screen and its objects
     gui.debug_screen = lv_obj_create(NULL, NULL);
     lv_obj_set_style(debug_screen, &style_screen_bg);
@@ -407,6 +461,11 @@ void GUI::display_sensors() {
     lv_scr_load(gui.sensor_screen);
 }
 
+void GUI::display_match_checklist(){
+    // Load the Match Checklist Screen
+    lv_scr_load(gui.match_screen);
+}
+
 void GUI::display_debug_terminal() {
     // Load the Debug Terminal Screen
     lv_scr_load(gui.debug_screen);
@@ -462,8 +521,9 @@ void GUI::run_selected_auton(){
 void GUI::update_sensors(){
     char buffer[300];
 
-    sprintf(buffer, "X: %.2f Y: %.2f Heading: %.2f°", util.get_robot_x(), util.get_robot_y(), robot_theta * 180 / M_PI);
+    sprintf(buffer, "X: %.2f Y: %.2f Heading: %.3f°", util.get_robot_x(), util.get_robot_y(), util.get_heading());
     lv_label_set_text(gui.position_readings, buffer);
+    lv_label_set_text(gui.match_position_readings, buffer);
 
     sprintf(buffer, "FL: %.2f ML: %.2f BL: %.2f", left_drive.get_positions()[0], left_drive.get_positions()[1], left_drive.get_positions()[2]);
     lv_label_set_text(gui.left_drivetrain_encoders, buffer);
@@ -482,4 +542,28 @@ void GUI::update_temps(){
 
     sprintf(buffer, "Intake: %.2f°C LB: %.2f°C", intake.get_temperature(), wall_stake.get_temperature());
     lv_label_set_text(gui.motor_temp, buffer);
+}
+
+void GUI::update_match_checklist(){
+    char buffer[300];
+    sprintf(buffer, "Battery: %.1f%", pros::battery::get_capacity());
+    lv_label_set_text(gui.battery_level, buffer);
+
+    const char* selected_color_str = (gui.selected_color == 0) ? "Red" : (gui.selected_color == 1) ? "Blue" : "None";
+    const char* selected_path_str = (gui.selected_path == 0) ? "Solo AWP" : (gui.selected_path == 1) ? "Left Half AWP" : (gui.selected_path == 2) ? "Right Half AWP" : (gui.selected_path == 3) ? "Goal Side Rush" : (gui.selected_path == 4) ? "Ring Side Rush" : "None";
+    sprintf(buffer, "Selected Auton: %s: %s", selected_color_str, selected_path_str);
+    lv_label_set_text(gui.selected_auton, buffer);
+
+    int total_seconds = pros::millis() / 1000;
+    int minutes = total_seconds / 60;
+    int seconds = total_seconds % 60;
+    sprintf(buffer, "Time Elapsed: %d:%02d", minutes, seconds);
+    lv_label_set_text(gui.elapsed_time, buffer);
+
+    sprintf(buffer, "Radio Status: %s", controller.is_connected() ? "Connected" : "Disconnected");
+    lv_label_set_text(gui.radio_status, buffer);
+
+    const char* competition_status_str = (pros::competition::get_status() == 7) ? "Disabled" : (pros::competition::get_status() == 6) ? "Autonomous" : (pros::competition::get_status() == 4) ? "Driver Control" : "Not Connected";
+    sprintf(buffer, "Competition Status: %s", competition_status_str);
+    lv_label_set_text(gui.competition_status, buffer);
 }

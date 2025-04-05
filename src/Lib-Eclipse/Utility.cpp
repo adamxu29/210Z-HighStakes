@@ -117,7 +117,7 @@ double Utility::get_heading()
     // }
 
     // return heading / imus.size();
-    return heading;
+    return util.get_min_angle(heading);
 }
 
 void Utility::reset_position()
@@ -213,18 +213,18 @@ int Utility::sign(double num)
     return (num > 0) ? 1 : ((num < 0) ? 0 : -1);
 }
 
-double Eclipse::Utility::get_min_angle(float angle){
+double Eclipse::Utility::get_min_angle(float angle) {
     float theta = fmod(angle, 360);
 
-    while(theta < 0){
+    if (theta < -180) {
         theta += 360;
-    }
-    while(theta > 0){
+    } else if (theta > 180) {
         theta -= 360;
     }
 
     return theta;
 }
+
 
 double Eclipse::Utility::get_min_error(float angle1, float angle2)
 {

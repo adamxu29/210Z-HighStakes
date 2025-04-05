@@ -17,14 +17,12 @@ void initialize() {
 	gui.initialize_styles();
 	gui.initialize_objects();
 
-	gui.display_debug_terminal();
+	gui.display_home();
 	
 	util.set_drive_constants(3.25, 0.75, 600);
 
-	odom.set_horizontal_tracker_specs(3.25, 1.738);
-	odom.set_vertical_tracker_specs(3.25, -0.904);
-
-	// -2.73, 1.42
+	odom.set_horizontal_tracker_specs(2.75, -2.89);
+	odom.set_vertical_tracker_specs(3.25, -6.64);
 
 	imu1.tare_rotation();
 	imu2.tare_rotation();
@@ -42,6 +40,22 @@ void initialize() {
 
 	pros::delay(3000);
 	controller.rumble(".");
+
+	pros::Task update_gui([]{
+		while(true){
+			gui.update_sensors();
+			gui.update_temps();
+			gui.update_match_checklist();
+			pros::delay(8);
+		}
+	});
+
+	pros::Task update_odom([]{
+		while(true){
+			odom.update_position();
+			pros::delay(8);
+		}
+	});
 
 	pros::Task wall_stake_control([]{
 		while (driver.wall_stake_on) {

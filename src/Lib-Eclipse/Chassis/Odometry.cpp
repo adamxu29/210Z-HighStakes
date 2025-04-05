@@ -23,11 +23,11 @@ float Odom::get_horizontal_displacement(){
 }
 
 float Odom::get_left_displacement(){
-    return (float) (left_drive.get_positions()[1]) * odom.vertical_wheel_diameter * M_PI / 360;
+    return (float) (left_drive.get_positions()[2]) * odom.vertical_wheel_diameter * M_PI / 360;
 }
 
 float Odom::get_right_displacement(){
-    return (float) (right_drive.get_positions()[1] * odom.vertical_wheel_diameter * M_PI / 360);
+    return (float) (right_drive.get_positions()[2] * odom.vertical_wheel_diameter * M_PI / 360);
 }
 
 double heading;
@@ -36,14 +36,15 @@ double prev_horizontal_displacement = 0;
 double prev_vertical_displacement = 0;
 double prev_heading = 0;
 
+// Pilons odom implementation
 void Odom::update_position(){
     double horizontal_pos = get_horizontal_displacement();
-    double vertical_pos = (get_right_displacement() + get_left_displacement()) / 2;
+    double vertical_pos = get_right_displacement();
 
     double delta_horizontal = horizontal_pos - prev_horizontal_displacement;
     double delta_vertical = vertical_pos - prev_vertical_displacement;
 
-    heading = -util.get_heading() * M_PI / 180;
+    heading = -util.get_min_angle(util.get_heading()) * M_PI / 180.0; // convert to radians
     double delta_heading = heading - prev_heading;
 
     prev_horizontal_displacement = horizontal_pos;
@@ -62,7 +63,7 @@ void Odom::update_position(){
         local_y = (2 * sin(delta_heading / 2) * (delta_vertical / delta_heading + vertical_wheel_offset));
     }
 
-    double avg_heading = (heading + delta_heading) / 2;
+    double avg_heading = heading + (delta_heading / 2);
 
     odom.x += local_x * cos(avg_heading) - local_y * sin(avg_heading);
     odom.y += local_x * sin(avg_heading) + local_y * cos(avg_heading);
@@ -73,4 +74,5 @@ void Odom::update_position(){
 
     gui.update_sensors();
     gui.update_temps();
+    gui.update_match_checklist();
 }

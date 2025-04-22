@@ -111,7 +111,7 @@ lv_res_t GUI::alliance_color_callback(lv_obj_t *btn) {
     else{
         gui.selected_color = -1;
     }
-    return LV_RES_OK; // Indicate that the event was handled
+    return LV_RES_OK;
 }
 
 lv_res_t GUI::autonomous_path_callback(lv_obj_t *btn) {
@@ -142,7 +142,19 @@ lv_res_t GUI::autonomous_path_callback(lv_obj_t *btn) {
         else{
             gui.selected_path = -1;
     }
-    return LV_RES_OK; // Indicate that the event was handled
+    return LV_RES_OK;
+}
+
+lv_res_t GUI::skills_toggle_callback(lv_obj_t *btn) {
+    if(driver.skills){
+        lv_btn_set_state(btn, LV_BTN_STATE_REL);
+        driver.skills = false;
+    }
+    else{
+        lv_btn_set_state(btn, LV_BTN_STATE_PR);
+        driver.skills = true;
+    }
+    return LV_RES_OK;
 }
 
 void GUI::initialize_objects() {
@@ -307,32 +319,32 @@ void GUI::initialize_objects() {
 
     gui.position_readings = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.position_readings, &gui.style_text);
-        lv_obj_align(gui.position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
+        lv_obj_align(gui.position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 50);
         lv_label_set_text(gui.position_readings, "X: 0.0 Y: 0.0 Heading: 0.0°");
 
     gui.left_drivetrain_encoders = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.left_drivetrain_encoders, &gui.style_text);
-        lv_obj_align(gui.left_drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
+        lv_obj_align(gui.left_drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 67);
         lv_label_set_text(gui.left_drivetrain_encoders, "FL: 0.0 ML: 0.0 BL: 0.0");
 
     gui.right_drivetrain_encoders = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.right_drivetrain_encoders, &gui.style_text);
-        lv_obj_align(gui.right_drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_obj_align(gui.right_drivetrain_encoders, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 84);
         lv_label_set_text(gui.right_drivetrain_encoders, "FR: 0.0 MR: 0.0 BR: 0.0");
 
     gui.misc_sensors = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.misc_sensors, &gui.style_text);
-        lv_obj_align(gui.misc_sensors, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
+        lv_obj_align(gui.misc_sensors, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 101);
         lv_label_set_text(gui.misc_sensors, "Wall Stake: 0.0 Color Sensor: 0.0");
 
     gui.drivetrain_temp = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.drivetrain_temp, &gui.style_text);
-        lv_obj_align(gui.drivetrain_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 118);
+        lv_obj_align(gui.drivetrain_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 118);
         lv_label_set_text(gui.drivetrain_temp, "Drivetrain Temperature: 0.0°C");
 
     gui.motor_temp = lv_label_create(gui.sensor_screen, NULL);
         lv_label_set_style(gui.motor_temp, &gui.style_text);
-        lv_obj_align(gui.motor_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 135);
+        lv_obj_align(gui.motor_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 135);
         lv_label_set_text(gui.motor_temp, "Intake: 0.0°C LB: 0.0°C");
 
     gui.sensor_return_home = lv_btn_create(gui.sensor_screen, NULL);
@@ -353,28 +365,38 @@ void GUI::initialize_objects() {
         lv_label_set_text(gui.match_title, "Match Checklist");
     gui.match_position_readings = lv_label_create(gui.match_screen, NULL);
         lv_label_set_style(gui.match_position_readings, &gui.style_text);
-        lv_obj_align(gui.match_position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
+        lv_obj_align(gui.match_position_readings, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 50);
         lv_label_set_text(gui.match_position_readings, "X: 0.0 Y: 0.0 Heading: 0.0°");
     gui.battery_level = lv_label_create(gui.match_screen, NULL);
         lv_label_set_style(gui.battery_level, &gui.style_text);
-        lv_obj_align(gui.battery_level, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
+        lv_obj_align(gui.battery_level, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 67);
         lv_label_set_text(gui.battery_level, "Battery Level: 0.0%");
     gui.elapsed_time = lv_label_create(gui.match_screen, NULL);
         lv_label_set_style(gui.elapsed_time, &gui.style_text);
-        lv_obj_align(gui.elapsed_time, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_obj_align(gui.elapsed_time, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 84);
         lv_label_set_text(gui.elapsed_time, "Startup Time: 0ms");
     gui.selected_auton = lv_label_create(gui.match_screen, NULL);
         lv_label_set_style(gui.selected_auton, &gui.style_text);
-        lv_obj_align(gui.selected_auton, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
+        lv_obj_align(gui.selected_auton, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 101);
         lv_label_set_text(gui.selected_auton, "Selected Auton: None None");
     gui.radio_status = lv_label_create(gui.match_screen, NULL);
         lv_label_set_style(gui.radio_status, &gui.style_text);
-        lv_obj_align(gui.radio_status, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 118);
+        lv_obj_align(gui.radio_status, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 118);
         lv_label_set_text(gui.radio_status, "Radio Status: Hawk Tuah");
     gui.competition_status = lv_label_create(gui.match_screen, NULL);
         lv_label_set_style(gui.competition_status, &gui.style_text);
-        lv_obj_align(gui.competition_status, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 135);
+        lv_obj_align(gui.competition_status, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 135);
         lv_label_set_text(gui.competition_status, "Competition Status: Hawk Tuah");
+    gui.skills_toggle = lv_btn_create(gui.match_screen, NULL);
+        lv_btn_set_toggle(gui.blue_btn, true);
+        lv_btn_set_style(gui.skills_toggle, LV_BTN_STYLE_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.skills_toggle, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_style(gui.skills_toggle, LV_BTN_STYLE_TGL_REL, &gui.style_purple_btn);
+        lv_btn_set_style(gui.skills_toggle, LV_BTN_STYLE_TGL_PR, &gui.style_pressed_purple_btn);
+        lv_btn_set_action(gui.skills_toggle, LV_BTN_ACTION_CLICK, gui.skills_toggle_callback);
+        lv_obj_set_size(gui.skills_toggle, 140, 30);
+        lv_obj_align(gui.skills_toggle, NULL, LV_ALIGN_IN_TOP_LEFT, 169, 152);
+        lv_label_set_text(lv_label_create(gui.skills_toggle, NULL), "Skills Toggle");
     gui.match_return_home = lv_btn_create(gui.match_screen, NULL);
         lv_btn_set_style(gui.match_return_home, LV_BTN_STYLE_REL, &gui.style_purple_btn);
         lv_btn_set_style(gui.match_return_home, LV_BTN_STYLE_PR, &gui.style_pressed_purple_btn);
@@ -395,47 +417,47 @@ void GUI::initialize_objects() {
         lv_label_set_text(gui.debug_title, "Debug Terminal");
     gui.debug_line_1 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_1, &gui.style_text);
-        lv_obj_align(gui.debug_line_1, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 50);
+        lv_obj_align(gui.debug_line_1, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 50);
         lv_label_set_text(gui.debug_line_1, "Debug Line 1: ");
 
     gui.debug_line_2 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_2, &gui.style_text);
-        lv_obj_align(gui.debug_line_2, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 67);
+        lv_obj_align(gui.debug_line_2, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 67);
         lv_label_set_text(gui.debug_line_2, "Debug Line 2: ");
 
     gui.debug_line_3 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_3, &gui.style_text);
-        lv_obj_align(gui.debug_line_3, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 84);
+        lv_obj_align(gui.debug_line_3, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 84);
         lv_label_set_text(gui.debug_line_3, "Debug Line 3: ");
 
     gui.debug_line_4 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_4, &gui.style_text);
-        lv_obj_align(gui.debug_line_4, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 101);
+        lv_obj_align(gui.debug_line_4, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 101);
         lv_label_set_text(gui.debug_line_4, "Debug Line 4: ");
 
     gui.debug_line_5 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_5, &gui.style_text);
-        lv_obj_align(gui.debug_line_5, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 118);
+        lv_obj_align(gui.debug_line_5, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 118);
         lv_label_set_text(gui.debug_line_5, "Debug Line 5: ");
 
     gui.debug_line_6 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_6, &gui.style_text);
-        lv_obj_align(gui.debug_line_6, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 135);    
+        lv_obj_align(gui.debug_line_6, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 135);    
         lv_label_set_text(gui.debug_line_6, "Debug Line 6: ");
 
     gui.debug_line_7 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_7, &gui.style_text);
-        lv_obj_align(gui.debug_line_7, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 152);
+        lv_obj_align(gui.debug_line_7, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 152);
         lv_label_set_text(gui.debug_line_7, "Debug Line 7: ");
 
     gui.debug_line_8 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_8, &gui.style_text);
-        lv_obj_align(gui.debug_line_8, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 169);
+        lv_obj_align(gui.debug_line_8, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 169);
         lv_label_set_text(gui.debug_line_8, "Debug Line 8: ");
 
     gui.debug_line_9 = lv_label_create(gui.debug_screen, NULL);
         lv_label_set_style(gui.debug_line_9, &gui.style_text);
-        lv_obj_align(gui.debug_line_9, NULL, LV_ALIGN_IN_TOP_LEFT, 40, 186);
+        lv_obj_align(gui.debug_line_9, NULL, LV_ALIGN_IN_TOP_LEFT, 30, 186);
         lv_label_set_text(gui.debug_line_9, "Debug Line 9: ");
 
     gui.debug_return_home = lv_btn_create(gui.debug_screen, NULL);
@@ -526,6 +548,7 @@ void GUI::update_sensors(){
     sprintf(buffer, "X: %.2f Y: %.2f Heading: %.3f°", util.get_robot_x(), util.get_robot_y(), util.get_heading());
     lv_label_set_text(gui.position_readings, buffer);
     lv_label_set_text(gui.match_position_readings, buffer);
+    lv_label_set_text(gui.debug_line_9, buffer);
 
     sprintf(buffer, "FL: %.2f ML: %.2f BL: %.2f", left_drive.get_positions()[0], left_drive.get_positions()[1], left_drive.get_positions()[2]);
     lv_label_set_text(gui.left_drivetrain_encoders, buffer);
@@ -542,7 +565,7 @@ void GUI::update_temps(){
     sprintf(buffer, "Drivetrain Temperature: %.2f°C", util.get_drive_temp());
     lv_label_set_text(gui.drivetrain_temp, buffer);
 
-    sprintf(buffer, "Intake: %.2f°C LB: %.2f°C", intake.get_temperature(), wall_stake.get_temperature());
+    sprintf(buffer, "Intake: %.2f°C LB: %.2f°C", intake.get_temperature(), (wall_stake.get_temperatures()[0] + wall_stake.get_temperatures()[1]) / 2);
     lv_label_set_text(gui.motor_temp, buffer);
 }
 
@@ -551,9 +574,9 @@ void GUI::update_match_checklist(){
     sprintf(buffer, "Battery: %.1f%", pros::battery::get_capacity());
     lv_label_set_text(gui.battery_level, buffer);
 
-    const char* selected_color_str = (gui.selected_color == 0) ? "Red" : (gui.selected_color == 1) ? "Blue" : "None";
-    const char* selected_path_str = (gui.selected_path == 0) ? "Solo AWP" : (gui.selected_path == 1) ? "Left Half AWP" : (gui.selected_path == 2) ? "Right Half AWP" : (gui.selected_path == 3) ? "Goal Side Rush" : (gui.selected_path == 4) ? "Ring Side Rush" : "None";
-    sprintf(buffer, "Selected Auton: %s: %s", selected_color_str, selected_path_str);
+    const char* selected_color_str = driver.skills ? "Skills" : ((gui.selected_color == 0) ? "Red:" : (gui.selected_color == 1) ? "Blue:" : "None:");
+    const char* selected_path_str = driver.skills ? " " : ((gui.selected_path == 0) ? "Solo AWP" : (gui.selected_path == 1) ? "Left Half AWP" : (gui.selected_path == 2) ? "Right Half AWP" : (gui.selected_path == 3) ? "Goal Side Rush" : (gui.selected_path == 4) ? "Ring Side Rush" : "Test");
+    sprintf(buffer, "Selected Auton: %s %s", selected_color_str, selected_path_str);
     lv_label_set_text(gui.selected_auton, buffer);
 
     int total_seconds = pros::millis() / 1000;

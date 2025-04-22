@@ -80,11 +80,27 @@ void Eclipse::Utility::set_drive_constants(const double dt_wheel_diameter, const
     this->motor_cartridge = dt_motor_cartridge;
 }
 
+double Utility::get_angular_error(double x, double y, bool robot_relative)
+{   
+    // angular error relative to robot
+    double delta_x = x - util.get_robot_x();
+    double delta_y = y - util.get_robot_y();
+
+    double delta_theta = atan2(delta_y, delta_x) - (robot_relative ? 90 + robot_theta : 0);
+
+    // normalize angle to be between -pi and pi
+    while(fabs(delta_theta) > M_PI){
+        (delta_theta > 0) ? delta_theta -= 2 * M_PI : delta_theta += 2 * M_PI;
+    }
+
+    return M_PI_2 - delta_theta; // convert to standard angle
+}
+
 double Utility::get_position()
 {
     // use motors that disconnect the least
     double left_position = left_drive.get_positions()[1];
-    double right_position = right_drive.get_positions()[1];
+    double right_position = right_drive.get_positions()[0];
 
     // std::cout << "left" << left_position << " right" << right_position << std::endl;
     

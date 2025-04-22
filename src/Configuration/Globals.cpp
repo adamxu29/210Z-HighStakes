@@ -6,28 +6,34 @@ using namespace Eclipse;
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::Motor_Group left_drive({-13, -12, -11});
-pros::Motor_Group right_drive({18, 19, 20});
+pros::Motor_Group left_drive({-12, -11, 13});
+pros::Motor_Group right_drive({19, -18, 20});
 
-pros::Motor intake(-21);
+pros::Motor intake(14);
 
-pros::Motor wall_stake(-4);
+pros::Motor_Group wall_stake({-10, 1});
 
 pros::Rotation horizontal_rotation_sensor(10);
 pros::Rotation wall_stake_rotation_sensor(9);
 
 pros::Optical color(2);
 
-pros::ADIDigitalOut clamp('g');
-pros::ADIDigitalOut right_doinker('d');
-pros::ADIDigitalOut left_doinker('a');
-pros::ADIDigitalOut goal_rush_release('h');
-pros::ADIDigitalOut intake_lift('b');
+pros::ADIDigitalOut clamp('h');
+pros::ADIDigitalOut right_doinker('g');
+pros::ADIDigitalOut left_doinker('f');
+pros::ADIDigitalOut goal_rush_clamp('c');
+pros::ADIDigitalOut climb_release('b');
+pros::ADIDigitalOut climb_claw('a');
 
 pros::ADIAnalogIn line('f');
 
 pros::IMU imu1(14);
 pros::IMU imu2(17);
+
+pros::Distance front_sensor(5);
+pros::Distance left_sensor(6);
+pros::Distance right_sensor(16);
+pros::Distance back_sensor(7);
 
 Utility util;
 OPControl driver;
@@ -38,6 +44,8 @@ Rotation_PID r_pid;
 Curve_PID c_pid;
 PID m_pid;
 Odom odom;
+Drive drive;
+// MonteCarloLocalization mcl;
 
 Autonomous_Paths auton;
 Autonomous_Paths::Red red;

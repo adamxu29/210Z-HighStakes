@@ -17,12 +17,13 @@ void initialize() {
 	gui.initialize_styles();
 	gui.initialize_objects();
 
-	gui.display_home();
+	gui.display_debug_terminal();
+	initialize_particles();
 	
 	util.set_drive_constants(3.25, 0.75, 600);
 
 	odom.set_horizontal_tracker_specs(2.75, -2.89);
-	odom.set_vertical_tracker_specs(3.25, -6.64);
+	odom.set_vertical_tracker_specs(3.25, -6.56);
 
 	imu1.tare_rotation();
 	imu2.tare_rotation();
@@ -35,7 +36,7 @@ void initialize() {
 
 	color.set_led_pwm(0);
 	color.set_integration_time(10);
-
+	
 	util.set_robot_position(0.0, 0.0);
 
 	pros::delay(3000);
@@ -52,15 +53,25 @@ void initialize() {
 
 	pros::Task update_odom([]{
 		while(true){
+			// Particle estimate = get_estimate();
 			odom.update_position();
+			// //predict();
+			// run_localization_step();
+			// pros::delay(10);
+
+			// char buffer[300];
+			// //sprintf(buffer, "Front: %.2f Back: %.2f Left: %.2f Right: %.2f", front_sensor.get(), back_sensor.get(), left_sensor.get(), right_sensor.get());
+			// sprintf(buffer, "X: %.2f Y: %.2f Theta: %.2f", estimate.x, estimate.y, imu1.get_heading());
+			// lv_label_set_text(gui.position_readings, buffer);
+
 			pros::delay(8);
 		}
 	});
 
 	pros::Task wall_stake_control([]{
 		while (driver.wall_stake_on) {
-			driver.power_wall_stake();
-			driver.control_wall_stake();
+			// driver.power_wall_stake();
+			// driver.control_wall_stake();
 			pros::delay(8);
 		}
 	});
@@ -105,11 +116,11 @@ void initialize() {
 }
 
 void disabled() {
-	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 void competition_initialize() {
-	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 char buffer[300];
@@ -120,15 +131,14 @@ void autonomous(){
 
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
 	color.set_led_pwm(50);
 
 	// Run auton selector for
 	
-	gui.run_selected_auton();
-	// auton.skills();
+	driver.skills ? auton.skills() : gui.run_selected_auton();
 }
 
 /**
@@ -149,7 +159,7 @@ void opcontrol() {
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-	wall_stake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	bool tuning = false;
 	util.sorting = true;
 	util.stop_on_color = false;
@@ -168,4 +178,15 @@ void opcontrol() {
 		}
 		pros::delay(8);
 	}
+	// pros::lcd::initialize();
+
+    // // Optional: wait a bit for sensors to boot
+    // pros::delay(500);
+
+    // initialize_particles();  // Spread out particles randomly
+
+    // while (true) {
+    //     run_localization_step();  // Run the MCL update loop
+    //     pros::delay(10);  
+	// }
 }

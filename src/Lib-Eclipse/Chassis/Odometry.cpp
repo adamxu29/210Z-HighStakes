@@ -4,10 +4,11 @@
 using namespace Eclipse;
 
 // global position variables
-double robot_x;
-double robot_y;
+double robot_x = 0;
+double robot_y = 0;
 double robot_theta;
 
+// helper functions
 void Odom::set_horizontal_tracker_specs(double diameter, double offset){
     odom.horizontal_wheel_diameter = diameter;
     odom.horizontal_wheel_offset = offset;
@@ -19,7 +20,7 @@ void Odom::set_vertical_tracker_specs(double diameter, double offset){
 }
 
 float Odom::get_horizontal_displacement(){
-    return  ( ((float)horizontal_rotation_sensor.get_position() / 100) * odom.horizontal_wheel_diameter * M_PI / 360);
+    return  (((float)horizontal_rotation_sensor.get_position() / 100) * odom.horizontal_wheel_diameter * M_PI / 360);
 }
 
 float Odom::get_left_displacement(){
@@ -46,10 +47,9 @@ void Odom::update_position(){
 
     heading = -util.get_min_angle(util.get_heading()) * M_PI / 180.0; // convert to radians
     double delta_heading = heading - prev_heading;
-
+    
     prev_horizontal_displacement = horizontal_pos;
     prev_vertical_displacement = vertical_pos;
-    prev_heading = heading;
 
     double local_x;
     double local_y;
@@ -63,7 +63,8 @@ void Odom::update_position(){
         local_y = (2 * sin(delta_heading / 2) * (delta_vertical / delta_heading + vertical_wheel_offset));
     }
 
-    double avg_heading = heading + (delta_heading / 2);
+    double avg_heading = prev_heading + (delta_heading / 2);
+    prev_heading = heading;
 
     odom.x += local_x * cos(avg_heading) - local_y * sin(avg_heading);
     odom.y += local_x * sin(avg_heading) + local_y * cos(avg_heading);

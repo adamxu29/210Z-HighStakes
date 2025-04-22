@@ -43,8 +43,8 @@ void Eclipse::OPControl::drivetrain_control(){
     int32_t leftYjoystick  = (controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
     int32_t leftXjoystick  = (controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X));
 
-    int32_t left_power = ((rightXjoystick * 0.9) + leftYjoystick);
-    int32_t right_power = (leftYjoystick - (rightXjoystick * 0.9) );
+    int32_t left_power = (leftYjoystick - (rightXjoystick * 0.9));
+    int32_t right_power = (leftYjoystick + (rightXjoystick * 0.9));
 
     left_drive.move(left_power);
     right_drive.move(right_power);
@@ -74,14 +74,14 @@ void Eclipse::OPControl::manual_wall_stake(){
 
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(12000); }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(-12000); }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){ 
-        m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
-	    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15); 
-    }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){ 
-        m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
-	    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 34); 
-    }
+    // else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){ 
+    //     m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
+	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15); 
+    // }
+    // else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){ 
+    //     m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
+	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 34); 
+    // }
     else{ wall_stake.move_voltage(0); }
 
 }
@@ -177,8 +177,7 @@ void Eclipse::OPControl::driver_control(){
     
     this->skills ? driver.exponential_curve_accelerator() : driver.drivetrain_control();
     driver.power_intake(100);
-    // driver.manual_wall_stake(50);
-
+    driver.manual_wall_stake();
     driver.activate_clamp();
     driver.score_alliance_stake();
     driver.activate_right_doinker();

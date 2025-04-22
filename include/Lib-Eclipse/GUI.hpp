@@ -13,7 +13,7 @@ namespace Eclipse{
             *misc_sensors, *drivetrain_temp, *motor_temp, *sensor_return_home;
 
             lv_obj_t *match_screen, *match_title, *match_position_readings, *battery_level, *selected_auton, *elapsed_time,
-            *radio_status, *competition_status, *match_return_home;
+            *radio_status, *competition_status, *skills_toggle, *match_return_home;
 
             lv_obj_t *debug_screen, *debug_title, *debug_line_1, *debug_line_2, *debug_line_3, *debug_line_4, *debug_line_5,
             *debug_line_6, *debug_line_7, *debug_line_8, *debug_line_9, *debug_return_home;
@@ -47,6 +47,8 @@ namespace Eclipse{
 
             lv_obj_t *current_selected_path = nullptr;
             static lv_res_t autonomous_path_callback(lv_obj_t *btn);
+
+            static lv_res_t skills_toggle_callback(lv_obj_t *btn);
 
             int selected_color = -1;
             int selected_path = -1;

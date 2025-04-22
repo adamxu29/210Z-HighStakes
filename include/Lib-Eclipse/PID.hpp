@@ -25,6 +25,6 @@ namespace Eclipse{
 
             void motor_pid(pros::Motor &motor, pros::Rotation &rotation, double target);
 
-            void wall_stake_pid(pros::Motor &motor, pros::Rotation &rotation, double target);
+            void wall_stake_pid(pros::Motor_Group &motor, pros::Rotation &rotation, double target);
     };
 }

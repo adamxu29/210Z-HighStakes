@@ -92,7 +92,7 @@ double Eclipse::Translation_PID::compute_t(double current_pos, double target)
     // std::cout << "output" << power << std::endl;
 
     if (power * (12000.0 / 127) > t_pid.t_max_speed * (12000.0 / 127)){ power = t_pid.t_max_speed; }
-    if (power * (12000.0 / 127) < -t_pid.t_max_speed * (12000.0 / 127)){ power = -t_pid.t_max_speed; }
+    else if (power * (12000.0 / 127) < -t_pid.t_max_speed * (12000.0 / 127)){ power = -t_pid.t_max_speed; }
 
     t_pid.t_prev_error = t_pid.t_error;
 
@@ -120,7 +120,7 @@ double Eclipse::Rotation_PID::compute_r(double current_pos, double theta)
     // std::cout << "output" << power << std::endl;
 
     if (power * (12000.0 / 127) > r_pid.r_max_speed * (12000.0 / 127)){ power = r_pid.r_max_speed; }
-    if (power * (12000.0 / 127) < -r_pid.r_max_speed * (12000.0 / 127)){ power = -r_pid.r_max_speed;}
+    else if (power * (12000.0 / 127) < -r_pid.r_max_speed * (12000.0 / 127)){ power = -r_pid.r_max_speed;}
 
     r_pid.r_prev_error = r_pid.r_error;
 
@@ -145,7 +145,7 @@ double Eclipse::Curve_PID::compute_c(double current_pos, double theta)
         power = c_pid.c_max_speed;
          
     }
-    if (power * (12000.0 / 127) < -c_pid.c_max_speed * (12000.0 / 127)){ power = -c_pid.c_max_speed; }
+    else if (power * (12000.0 / 127) < -c_pid.c_max_speed * (12000.0 / 127)){ power = -c_pid.c_max_speed; }
     
     // std::cout << "power" << power << std::endl;
     c_pid.c_prev_error = c_pid.c_error;
@@ -166,6 +166,7 @@ void Eclipse::Translation_PID::translation_pid(double target, double max_speed, 
 
     while (true)
     {
+        odom.update_position();
         double current_position = util.get_position() * odom.vertical_wheel_diameter * M_PI / 360;
  
         double voltage = t_pid.compute_t(current_position, target);
@@ -234,8 +235,13 @@ void Eclipse::Rotation_PID::rotation_pid(double theta, double max_speed, double 
 
     while (true)
     {
+        odom.update_position();
         double current_position = util.get_heading();
         double voltage = r_pid.compute_r(current_position, theta);
+
+        char buffer[300];
+        sprintf(buffer, "rotation pid: %.2f", this->r_error);
+        lv_label_set_text(gui.debug_line_1, buffer);
 
         // std::cout << "average pos" << current_position << std::endl;
         // std::cout << "error" << r_pid.r_error << std::endl;
@@ -243,14 +249,7 @@ void Eclipse::Rotation_PID::rotation_pid(double theta, double max_speed, double 
         left_drive.move_voltage(voltage * (12000.0 / 127.0));
         right_drive.move_voltage(-voltage * (12000.0 / 127.0));
         
-        if (fabs(r_pid.r_error) < r_pid.r_error_threshold)
-        {
-            r_pid.r_counter++;
-        }
-        else
-        {
-            r_pid.r_counter = 0;
-        }
+        fabs(r_pid.r_error) < r_pid.r_error_threshold ? r_pid.r_counter++ : r_pid.r_counter = 0;
 
         if (r_pid.r_counter >= r_pid.r_tolerance)
         {
@@ -294,6 +293,7 @@ void Eclipse::Curve_PID::curve_pid(double theta, double max_speed, double time_o
 
     while (true)
     {   
+        odom.update_position();
         double current_position = util.get_heading();
         double voltage = c_pid.compute_c(current_position, theta);
 

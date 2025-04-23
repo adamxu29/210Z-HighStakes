@@ -13,27 +13,29 @@ pros::Motor intake(14);
 
 pros::Motor_Group wall_stake({-10, 1});
 
-pros::Rotation horizontal_rotation_sensor(10);
-pros::Rotation wall_stake_rotation_sensor(9);
+pros::Rotation horizontal_rotation_sensor(6);
+pros::Rotation wall_stake_rotation_sensor(2);
 
-pros::Optical color(2);
+pros::Optical color(8);
 
 pros::ADIDigitalOut clamp('h');
 pros::ADIDigitalOut right_doinker('g');
 pros::ADIDigitalOut left_doinker('f');
-pros::ADIDigitalOut goal_rush_clamp('c');
-pros::ADIDigitalOut climb_release('b');
-pros::ADIDigitalOut climb_claw('a');
+pros::ADIDigitalOut goal_rush_clamp('e');
+pros::ADIDigitalOut climb_release('d');
+pros::ADIDigitalOut climb_claw_pto('c');
+
+pros::ADIDigitalIn limit_swtich('a');
 
 pros::ADIAnalogIn line('f');
 
-pros::IMU imu1(14);
+pros::IMU imu1(15);
 pros::IMU imu2(17);
 
-pros::Distance front_sensor(5);
-pros::Distance left_sensor(6);
-pros::Distance right_sensor(16);
-pros::Distance back_sensor(7);
+// pros::Distance front_sensor(5);
+// pros::Distance left_sensor(6);
+// pros::Distance right_sensor(16);
+// pros::Distance back_sensor(7);
 
 Utility util;
 OPControl driver;

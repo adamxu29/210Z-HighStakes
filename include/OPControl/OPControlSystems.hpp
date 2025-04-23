@@ -4,8 +4,11 @@ namespace Eclipse{
             bool clamping = false;
             bool right_doinker_down = false;
             bool left_doinker_down = false;
-            bool intake_up = false;
+            bool climb_clamping = false;
+
+            bool loading_lb = false;
         public:
+            bool endgame = false;
             bool skills = false;
             bool color_sorting = false;
 
@@ -30,8 +33,8 @@ namespace Eclipse{
             void activate_clamp();
             void activate_right_doinker();
             void activate_left_doinker();
-            void activate_ring_rush();
-            void lift_intake();
+            void activate_climb_claw_pto();
+            void activate_climb_release();
 
             void driver_control();
             void skills_control();

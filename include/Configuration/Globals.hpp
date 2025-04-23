@@ -19,7 +19,9 @@ extern pros::ADIDigitalOut right_doinker;
 extern pros::ADIDigitalOut left_doinker;
 extern pros::ADIDigitalOut goal_rush_clamp;
 extern pros::ADIDigitalOut climb_release;
-extern pros::ADIDigitalOut climb_claw;
+extern pros::ADIDigitalOut climb_claw_pto;
+
+extern pros::ADIDigitalIn limit_switch;
 
 extern pros::ADIAnalogIn line;
 

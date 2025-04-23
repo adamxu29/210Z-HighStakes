@@ -74,15 +74,10 @@ void Eclipse::OPControl::manual_wall_stake(){
 
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){ wall_stake.move_voltage(12000); }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){ wall_stake.move_voltage(-12000); }
-    // else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){ 
-    //     m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
-	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15); 
-    // }
-    // else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){ 
-    //     m_pid.set_constants(3.5, 0.0, 17, 10, 1.5, 5, 200, 127);
-	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 34); 
-    // }
-    else{ wall_stake.move_voltage(0); }
+    else if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){ 
+        this->loading_lb = true;
+    }
+    else{ wall_stake.move_velocity(0); }
 
 }
 
@@ -107,10 +102,16 @@ void Eclipse::OPControl::activate_left_doinker(){
     }
 }
 
-void Eclipse::OPControl::lift_intake(){
+void Eclipse::OPControl::activate_climb_claw_pto(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
-        this->intake_up = !this->intake_up;
-        intake_lift.set_value(this->intake_up);
+        this->climb_clamping = !this->climb_clamping;
+        climb_claw_pto.set_value(this->climb_clamping);
+    }
+}
+
+void Eclipse::OPControl::activate_climb_release(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+        climb_release.set_value(true);
     }
 }
 
@@ -140,8 +141,16 @@ void Eclipse::OPControl::prev_state() {
 }
 
 void Eclipse::OPControl::power_wall_stake(){
-    m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
-	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
+    // macro control
+    // m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
+	// m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
+
+    // manual control
+    if(this->loading_lb){
+        m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
+	    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15);
+        this->loading_lb = false;
+    }
 }
 
 void Eclipse::OPControl::control_wall_stake(){
@@ -164,6 +173,9 @@ void Eclipse::OPControl::alliance_stake(){
     }
     this->current_state = this->num_states - 1;
     this->target = 180;
+
+    m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
+    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 180);
 }
 
 void Eclipse::OPControl::score_alliance_stake(){
@@ -177,10 +189,14 @@ void Eclipse::OPControl::driver_control(){
     
     this->skills ? driver.exponential_curve_accelerator() : driver.drivetrain_control();
     driver.power_intake(100);
-    driver.manual_wall_stake();
-    driver.activate_clamp();
     driver.score_alliance_stake();
+
+    driver.activate_clamp();
     driver.activate_right_doinker();
     driver.activate_left_doinker();
-    driver.lift_intake();
+
+    if(driver.endgame){
+        driver.activate_climb_claw_pto();
+        driver.activate_climb_release();
+    }
 }

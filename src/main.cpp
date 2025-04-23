@@ -17,8 +17,8 @@ void initialize() {
 	gui.initialize_styles();
 	gui.initialize_objects();
 
-	gui.display_debug_terminal();
-	initialize_particles();
+	gui.display_home();
+	// initialize_particles();
 	
 	util.set_drive_constants(3.25, 0.75, 600);
 
@@ -70,8 +70,9 @@ void initialize() {
 
 	pros::Task wall_stake_control([]{
 		while (driver.wall_stake_on) {
-			// driver.power_wall_stake();
+			driver.power_wall_stake();
 			// driver.control_wall_stake();
+			driver.manual_wall_stake();
 			pros::delay(8);
 		}
 	});
@@ -156,6 +157,7 @@ void autonomous(){
  */
 
 void opcontrol() {
+	int start_time = pros::millis();
 	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -168,6 +170,9 @@ void opcontrol() {
 	driver.skills = false; // make true if running skills
 
 	while(true){
+		if((pros::millis() - start_time / 1000) > 105){
+			driver.endgame = true;
+		}
 		controller.print(0, 0, "DT: %0.1f", util.get_drive_temp());
 
 		if(tuning){

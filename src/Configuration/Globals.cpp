@@ -6,8 +6,8 @@ using namespace Eclipse;
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::Motor_Group left_drive({-12, -11, 13});
-pros::Motor_Group right_drive({19, -18, 20});
+pros::Motor_Group left_drive({19, -18, 20});
+pros::Motor_Group right_drive({-12, -11, 13});
 
 pros::Motor intake(14);
 

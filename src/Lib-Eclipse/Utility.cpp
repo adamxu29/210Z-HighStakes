@@ -100,7 +100,7 @@ double Utility::get_position()
 {
     // use motors that disconnect the least
     double left_position = left_drive.get_positions()[1];
-    double right_position = right_drive.get_positions()[0];
+    double right_position = right_drive.get_positions()[1];
 
     // std::cout << "left" << left_position << " right" << right_position << std::endl;
     
@@ -114,7 +114,7 @@ double Utility::get_drive_temp(){
 void Utility::set_tpi(){
     this->circumference = this->wheel_diameter * M_PI;
     
-    this->tpi = (50 * (3600 / this->motor_cartridge) * this->gear_ratio) / this->circumference;
+    this->tpi = 87.86 * (3600 / this->motor_cartridge) * this->gear_ratio / this->circumference;
 }
 
 // double Utility::get_wall_stake_position(){

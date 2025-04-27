@@ -3,7 +3,18 @@ namespace Eclipse
     class Utility
     {
         private:
+            double wheel_diameter = 0;
+            double gear_ratio = 0;
+            double motor_cartridge = 0;
+            double circumference = 0;
+            double tpr = 0;
+            double tpi = 0;
 
+            int red_max = 10;
+            int red_min = 0;
+            int blue_max = 225;
+            int blue_min = 210;
+            int sort_delay = 105;
             
         public:
             // motion
@@ -26,25 +37,14 @@ namespace Eclipse
             double get_position();
             void reset_position();
 
-            double wheel_diameter = 0;
-            double gear_ratio = 0;
-            double motor_cartridge = 0;
-            double circumference = 0;
-            double tpr = 0;
-            double tpi = 0;
-
             void set_tpi();
+            double get_tpi(){ return tpi; }
 
             double get_drive_temp();
             double get_wall_stake_position();
             double get_heading();
             
             // color sorting
-            int red_max = 20;
-            int red_min = 0;
-            int blue_max = 225;
-            int blue_min = 190;
-            int sort_delay = 105;
 
             bool sorting = true;
             bool stop_on_color = false;

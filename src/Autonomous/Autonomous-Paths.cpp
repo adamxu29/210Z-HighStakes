@@ -8,6 +8,8 @@ Odometry coord finder: //https://path.jerryio.com/
 
 using namespace Eclipse;
 
+// Rotation PID constants: 4.5, 0, (27 (θ = 45), 30 (θ = 90), 31 (θ = 180))
+
 // Red paths
 void Eclipse::Autonomous_Paths::Red::solo_awp()
 {
@@ -67,24 +69,65 @@ void Eclipse::Autonomous_Paths::skills()
 }
 
 void Eclipse::Autonomous_Paths::test()
-{
-    util.set_robot_position(0, 0);
-	drive.set_constants(5, 0, 15, 2.5, 0, 18, 90, 75);
-    drive.turn_to_point(-24, 0, 2);
+{   
+    gui.selected_color = 1;
+    // t_pid.set_t_constants(5, 0.0025, 35, 600);
+    r_pid.set_r_constants(4.5, 0, 27);
+    r_pid.rotation_pid(-47, 90, 1);
 
-    // pros::delay(1000);
-    // drive.set_constants(5, 0, 15, 4, 0, 18, 90, 75);
-    // drive.turn_to_point(-24, 0, 1);
+    // score wall stake
+    pros::delay(500);
 
-    // pros::delay(1000);
-    // t_pid.set_t_constants(5, 0, 15, 600);
-    // t_pid.translation_pid(24, 75, 2);
+    c_pid.set_c_constants(5, 0, 30);
+    c_pid.curve_pid(-15, 90, 1, 0.4, true);
+    
+    intake.move_voltage(0);
 
-    // pros::delay(1000);
-    // drive.set_constants(5, 0, 15, 2.5, 0, 18, 90, 75);
-    // drive.turn_to_point(24, 24, 2.0);
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(-24, 75, 1);
 
-    // r_pid.set_r_constants(2.5, 0, 18);
-    // r_pid.rotation_pid(90, 90, 2);
+    intake.move_voltage(0);
 
+    clamp.set_value(true);
+    pros::delay(100);
+
+    r_pid.set_r_constants(4.5, 0, 30);
+    r_pid.rotation_pid(90, 90, 1);
+
+    // intake.move_voltage(12000);
+
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(23, 90, 1);
+
+    r_pid.set_r_constants(4.5, 0, 30);
+    r_pid.rotation_pid(0, 90, 1);
+
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(26, 90, 1);
+
+    r_pid.set_r_constants(4.5, 0, 30);
+    r_pid.rotation_pid(42, 90, 1);
+
+    pros::delay(500);
+
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(15, 75, 1);
+
+    pros::delay(250);
+
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(-15, 90, 1);
+
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(10, 75, 1);
+
+    pros::delay(250);
+
+    t_pid.set_t_constants(5, 0.0025, 35, 600);
+    t_pid.translation_pid(-60, 90, 1);
+
+    // move lb up
+
+    c_pid.set_c_constants(5, 0, 30);
+    c_pid.curve_pid(-135, 90, 1.5, 0.2, false);
 }

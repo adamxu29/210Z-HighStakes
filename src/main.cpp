@@ -21,6 +21,7 @@ void initialize() {
 	// initialize_particles();
 	
 	util.set_drive_constants(3.25, 0.75, 600);
+	util.set_tpi();
 
 	odom.set_horizontal_tracker_specs(2.75, -2.89);
 	odom.set_vertical_tracker_specs(3.25, -6.56);
@@ -135,7 +136,7 @@ void autonomous(){
 	wall_stake.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 	left_drive.set_zero_position(0);
     right_drive.set_zero_position(0);
-	color.set_led_pwm(50);
+	color.set_led_pwm(100);
 
 	// Run auton selector for
 	

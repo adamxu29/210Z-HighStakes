@@ -43,8 +43,8 @@ void Eclipse::OPControl::drivetrain_control(){
     int32_t leftYjoystick  = (controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
     int32_t leftXjoystick  = (controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X));
 
-    int32_t left_power = (leftYjoystick - (rightXjoystick * 0.9));
-    int32_t right_power = (leftYjoystick + (rightXjoystick * 0.9));
+    int32_t left_power = (leftYjoystick + (rightXjoystick * 0.9));
+    int32_t right_power = (leftYjoystick - (rightXjoystick * 0.9));
 
     left_drive.move(left_power);
     right_drive.move(right_power);
@@ -142,15 +142,15 @@ void Eclipse::OPControl::prev_state() {
 
 void Eclipse::OPControl::power_wall_stake(){
     // macro control
-    // m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
-	// m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
+    m_pid.set_constants(0.8, 0.0, 0, 5, 1.5, 5, 200, 100);
+	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 
     // manual control
-    if(this->loading_lb){
-        m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
-	    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15);
-        this->loading_lb = false;
-    }
+    // if(this->loading_lb){
+    //     m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
+	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15);
+    //     this->loading_lb = false;
+    // }
 }
 
 void Eclipse::OPControl::control_wall_stake(){
@@ -172,11 +172,12 @@ void Eclipse::OPControl::alliance_stake(){
         this->color_sorting = false;
     }
     this->current_state = this->num_states - 1;
-    this->target = 180;
+    this->target = -180;
 
     m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
-    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 180);
+    m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, -180);
 }
+
 
 void Eclipse::OPControl::score_alliance_stake(){
     if(controller.get_digital_new_press(this->skills ? pros::E_CONTROLLER_DIGITAL_B : pros::E_CONTROLLER_DIGITAL_UP)){

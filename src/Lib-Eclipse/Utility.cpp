@@ -241,7 +241,6 @@ double Eclipse::Utility::get_min_angle(float angle) {
     return theta;
 }
 
-
 double Eclipse::Utility::get_min_error(float angle1, float angle2)
 {
     angle1 = fmod(angle1, 360);

@@ -10,7 +10,7 @@ namespace Eclipse
             double tpr = 0;
             double tpi = 0;
 
-            int red_max = 10;
+            int red_max = 15; //10
             int red_min = 0;
             int blue_max = 225;
             int blue_min = 210;

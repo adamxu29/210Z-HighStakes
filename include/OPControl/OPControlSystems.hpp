@@ -18,8 +18,8 @@ namespace Eclipse{
             void manual_wall_stake();
             
             bool wall_stake_on = true;
-            static const int num_states = 5;
-            double states[num_states] = {-13.5, 18, 32, 145, 230}; 
+            static const int num_states = 4;
+            double states[num_states] = {6, -21.7, -46, -143}; 
             int current_state = 0;
             double target = states[current_state];
 

@@ -29,7 +29,7 @@ void initialize() {
 	imu1.tare_rotation();
 	imu2.tare_rotation();
 
-	wall_stake_rotation_sensor.set_position(-1350);
+	wall_stake_rotation_sensor.set_position(600);
 	horizontal_rotation_sensor.reset_position();
 
 	left_drive.set_zero_position(0);
@@ -72,8 +72,8 @@ void initialize() {
 	pros::Task wall_stake_control([]{
 		while (driver.wall_stake_on) {
 			driver.power_wall_stake();
-			// driver.control_wall_stake();
-			driver.manual_wall_stake();
+			driver.control_wall_stake();
+			//driver.manual_wall_stake();
 			pros::delay(8);
 		}
 	});
@@ -167,13 +167,24 @@ void opcontrol() {
 	util.sorting = true;
 	util.stop_on_color = false;
 	gui.selected_color = 0;
+	bool ptoToggle = 0;
 
 	driver.skills = false; // make true if running skills
 
 	while(true){
-		if((pros::millis() - start_time / 1000) > 105){
-			driver.endgame = true;
+		// if((pros::millis() - start_time / 1000) > 105){
+		// 	driver.endgame = true;
+		// }
+
+		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){ //pto actuation
+			ptoToggle = !ptoToggle;
 		}
+		if (ptoToggle == 1){
+			climb_release.set_value(true);
+		} else {
+			climb_release.set_value(false);
+		}
+
 		controller.print(0, 0, "DT: %0.1f", util.get_drive_temp());
 
 		if(tuning){

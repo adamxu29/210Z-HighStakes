@@ -11,7 +11,7 @@ pros::Motor_Group right_drive({-12, -11, 13});
 
 pros::Motor intake(14);
 
-pros::Motor_Group wall_stake({-10, 1});
+pros::Motor_Group wall_stake({10, -1});
 
 pros::Rotation horizontal_rotation_sensor(6);
 pros::Rotation wall_stake_rotation_sensor(2);
@@ -22,8 +22,8 @@ pros::ADIDigitalOut clamp('h');
 pros::ADIDigitalOut right_doinker('g');
 pros::ADIDigitalOut left_doinker('f');
 pros::ADIDigitalOut goal_rush_clamp('e');
-pros::ADIDigitalOut climb_release('d');
-pros::ADIDigitalOut climb_claw_pto('c');
+pros::ADIDigitalOut climb_release('c');
+pros::ADIDigitalOut climb_claw_pto('d');
 
 pros::ADIDigitalIn limit_swtich('a');
 

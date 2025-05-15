@@ -1,6 +1,7 @@
 namespace Eclipse{
     class Autonomous_Paths{
     public:
+        bool goal_rush = false;
         // Red side autons
         class Red{
             public:

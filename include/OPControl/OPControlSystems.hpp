@@ -5,6 +5,7 @@ namespace Eclipse{
             bool right_doinker_down = false;
             bool left_doinker_down = false;
             bool climb_clamping = false;
+            bool wall_stake_boost_activated = false;
 
             bool loading_lb = false;
         public:
@@ -16,10 +17,14 @@ namespace Eclipse{
             void drivetrain_control();
             void power_intake(int speed);
             void manual_wall_stake();
-            
+
             bool wall_stake_on = true;
             static const int num_states = 4;
+<<<<<<< HEAD
             double states[num_states] = {6, -21.7, -46, -143}; 
+=======
+            double states[num_states] = {6, -19.4, -55, -143}; 
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
             int current_state = 0;
             double target = states[current_state];
 
@@ -35,6 +40,7 @@ namespace Eclipse{
             void activate_left_doinker();
             void activate_climb_claw_pto();
             void activate_climb_release();
+            void activate_wall_stake_boost();
 
             void driver_control();
             void skills_control();

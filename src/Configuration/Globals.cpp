@@ -20,14 +20,18 @@ pros::Optical color(8);
 
 pros::ADIDigitalOut clamp('h');
 pros::ADIDigitalOut right_doinker('g');
-pros::ADIDigitalOut left_doinker('f');
+pros::ADIDigitalOut left_doinker('d');
 pros::ADIDigitalOut goal_rush_clamp('e');
+<<<<<<< HEAD
 pros::ADIDigitalOut climb_release('c');
 pros::ADIDigitalOut climb_claw_pto('d');
+=======
+pros::ADIDigitalOut climb_release('f');
+pros::ADIDigitalOut climb_claw_pto('c');
+pros::ADIDigitalOut wall_stake_boost('b');
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
 
-pros::ADIDigitalIn limit_swtich('a');
-
-pros::ADIAnalogIn line('f');
+pros::ADIDigitalIn limit('a');
 
 pros::IMU imu1(15);
 pros::IMU imu2(17);

@@ -138,10 +138,10 @@ double Eclipse::Curve_PID::compute_c(double current_pos, double theta)
 
     double power = (c_pid.c_error * c_pid.c_kp) + (c_pid.c_integral * c_pid.c_ki) + (c_pid.c_derivative * c_pid.c_kd);
 
-    std::cout << "error" << c_pid.c_error << std::endl;
+    // std::cout << "error" << c_pid.c_error << std::endl;
 
     if (power * (12000.0 / 127) > c_pid.c_max_speed * (12000.0 / 127)){
-        std::cout << "max: " << c_pid.c_max_speed << std::endl;
+        // std::cout << "max: " << c_pid.c_max_speed << std::endl;
         power = c_pid.c_max_speed;
          
     }
@@ -171,9 +171,9 @@ void Eclipse::Translation_PID::translation_pid(double target, double max_speed, 
         double voltage = t_pid.compute_t(current_position, target);
         double heading_correction = util.get_min_error(util.get_heading(), theta) * t_pid.t_heading_kp;
 
-        std::cout << "average pos" << current_position << std::endl;
-        std::cout << "output" << voltage << std::endl;
-        std::cout << "error" << target - current_position << std::endl;
+        // std::cout << "average pos" << current_position << std::endl;
+        // std::cout << "output" << voltage << std::endl;
+        // std::cout << "error" << target - current_position << std::endl;
 
         left_drive.move_voltage((voltage * (12000.0 / 127.0)) + heading_correction);
         right_drive.move_voltage((voltage * (12000.0 / 127.0)) - heading_correction);

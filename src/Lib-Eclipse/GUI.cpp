@@ -1,6 +1,6 @@
 #include "main.h"
 #include "cmath"
-#include "210Z-logo.c"
+// #include "210Z-logo.c"
 
 using namespace Eclipse;
 
@@ -163,9 +163,9 @@ void GUI::initialize_objects() {
     lv_obj_set_style(home_screen, &style_screen_bg);
 
     // Configure the team logo
-    team_logo = lv_img_create(gui.home_screen, NULL);
-        lv_img_set_src(gui.team_logo, &logo_210z); 
-        lv_obj_align(gui.team_logo, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 52);
+    // team_logo = lv_img_create(gui.home_screen, NULL);
+    //     lv_img_set_src(gui.team_logo, &logo_210z); 
+    //     lv_obj_align(gui.team_logo, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 52);
 
     gui.auton_home_btn = lv_btn_create(gui.home_screen, NULL);
         lv_btn_set_style(gui.auton_home_btn, LV_BTN_STYLE_REL, &gui.style_purple_btn);

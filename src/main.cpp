@@ -73,7 +73,16 @@ void initialize() {
 		while (driver.wall_stake_on) {
 			driver.power_wall_stake();
 			driver.control_wall_stake();
+<<<<<<< HEAD
 			//driver.manual_wall_stake();
+=======
+
+			// if(wall_stake_rotation_sensor.get_position() < -120){
+			// 	wall_stake_boost.set_value(false);
+			// 	// driver.wall_stake_boost_activated = false;
+			// }
+			// driver.manual_wall_stake();
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
 			pros::delay(8);
 		}
 	});
@@ -111,6 +120,18 @@ void initialize() {
 				}
 			}
 			
+			pros::delay(100);
+		}
+	});
+
+	pros::Task goal_rush([]{
+		while(true){
+			if(limit.get_value() && pros::competition::get_status() == 6 && gui.selected_path == 3){
+				auton.goal_rush = true;
+				goal_rush_clamp.set_value(true);
+				left_doinker.set_value(false);
+				break;
+			}
 			pros::delay(8);
 		}
 	});
@@ -139,7 +160,7 @@ void autonomous(){
 	color.set_led_pwm(100);
 
 	// Run auton selector for
-	
+	// auton.skills();
 	driver.skills ? auton.skills() : gui.run_selected_auton();
 }
 
@@ -166,12 +187,16 @@ void opcontrol() {
 	bool tuning = false;
 	util.sorting = true;
 	util.stop_on_color = false;
+<<<<<<< HEAD
 	gui.selected_color = 0;
 	bool ptoToggle = 0;
+=======
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
 
 	driver.skills = false; // make true if running skills
 
 	while(true){
+<<<<<<< HEAD
 		// if((pros::millis() - start_time / 1000) > 105){
 		// 	driver.endgame = true;
 		// }
@@ -184,6 +209,8 @@ void opcontrol() {
 		} else {
 			climb_release.set_value(false);
 		}
+=======
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
 
 		controller.print(0, 0, "DT: %0.1f", util.get_drive_temp());
 

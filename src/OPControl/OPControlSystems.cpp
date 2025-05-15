@@ -54,11 +54,11 @@ void Eclipse::OPControl::power_intake(int speed){ // speed in percent
     if(!driver.color_sorting){
         if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L2 : pros::E_CONTROLLER_DIGITAL_R1 /**Skills: L2 */ )){
             intake.move_voltage(12000 * (speed / 100));
-            color.set_led_pwm(50);
+            color.set_led_pwm(100);
         }
         else if(controller.get_digital(this->skills ? pros::E_CONTROLLER_DIGITAL_L1 : pros::E_CONTROLLER_DIGITAL_R2 /**Skills: L2 */ )){
             intake.move_voltage(-12000 * (speed / 100));
-            color.set_led_pwm(50);
+            color.set_led_pwm(100);
         }
         else{
             intake.move_voltage(0);
@@ -115,6 +115,13 @@ void Eclipse::OPControl::activate_climb_release(){
     }
 }
 
+void Eclipse::OPControl::activate_wall_stake_boost(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+        this->wall_stake_boost_activated = !this->wall_stake_boost_activated;
+        wall_stake_boost.set_value(this->wall_stake_boost_activated);
+    }
+}
+
 void Eclipse::OPControl::next_state() {
     if(this-> current_state == 1){
         this->color_sorting = true;
@@ -142,13 +149,22 @@ void Eclipse::OPControl::prev_state() {
 
 void Eclipse::OPControl::power_wall_stake(){
     // macro control
+<<<<<<< HEAD
     m_pid.set_constants(0.8, 0.0, 0, 5, 1.5, 5, 200, 100);
+=======
+    m_pid.set_constants(.78, 0.0, 0, 3, 1, 5, 200, 127); //0.8
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
 	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 
     // manual control
     // if(this->loading_lb){
+<<<<<<< HEAD
     //     m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
 	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15);
+=======
+    //     m_pid.set_constants(4, 0.0, 35, 5, 1.5, 5, 200, 100);
+	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, -20);
+>>>>>>> 3eea8f8 (post worlds - removed teir 2)
     //     this->loading_lb = false;
     // }
 }
@@ -162,15 +178,6 @@ void Eclipse::OPControl::control_wall_stake(){
 }
 
 void Eclipse::OPControl::alliance_stake(){
-    if(this-> current_state == 1){
-        this->color_sorting = true;
-
-        intake.move_voltage(-6000);
-        pros::delay(40);
-        intake.move_voltage(0);
-
-        this->color_sorting = false;
-    }
     this->current_state = this->num_states - 1;
     this->target = -180;
 
@@ -195,9 +202,7 @@ void Eclipse::OPControl::driver_control(){
     driver.activate_clamp();
     driver.activate_right_doinker();
     driver.activate_left_doinker();
-
-    if(driver.endgame){
-        driver.activate_climb_claw_pto();
-        driver.activate_climb_release();
-    }
+    driver.activate_climb_claw_pto();
+    driver.activate_climb_release();
+    driver.activate_wall_stake_boost();
 }

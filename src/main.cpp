@@ -73,16 +73,12 @@ void initialize() {
 		while (driver.wall_stake_on) {
 			driver.power_wall_stake();
 			driver.control_wall_stake();
-<<<<<<< HEAD
-			//driver.manual_wall_stake();
-=======
 
 			// if(wall_stake_rotation_sensor.get_position() < -120){
 			// 	wall_stake_boost.set_value(false);
 			// 	// driver.wall_stake_boost_activated = false;
 			// }
 			// driver.manual_wall_stake();
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
 			pros::delay(8);
 		}
 	});
@@ -187,30 +183,10 @@ void opcontrol() {
 	bool tuning = false;
 	util.sorting = true;
 	util.stop_on_color = false;
-<<<<<<< HEAD
-	gui.selected_color = 0;
-	bool ptoToggle = 0;
-=======
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
 
 	driver.skills = false; // make true if running skills
 
 	while(true){
-<<<<<<< HEAD
-		// if((pros::millis() - start_time / 1000) > 105){
-		// 	driver.endgame = true;
-		// }
-
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){ //pto actuation
-			ptoToggle = !ptoToggle;
-		}
-		if (ptoToggle == 1){
-			climb_release.set_value(true);
-		} else {
-			climb_release.set_value(false);
-		}
-=======
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
 
 		controller.print(0, 0, "DT: %0.1f", util.get_drive_temp());
 

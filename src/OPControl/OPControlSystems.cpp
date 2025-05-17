@@ -149,22 +149,13 @@ void Eclipse::OPControl::prev_state() {
 
 void Eclipse::OPControl::power_wall_stake(){
     // macro control
-<<<<<<< HEAD
-    m_pid.set_constants(0.8, 0.0, 0, 5, 1.5, 5, 200, 100);
-=======
     m_pid.set_constants(.78, 0.0, 0, 3, 1, 5, 200, 127); //0.8
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
 	m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, this->target);
 
     // manual control
     // if(this->loading_lb){
-<<<<<<< HEAD
-    //     m_pid.set_constants(4, 0.0, 15, 5, 1.5, 5, 200, 100);
-	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, 15);
-=======
     //     m_pid.set_constants(4, 0.0, 35, 5, 1.5, 5, 200, 100);
 	//     m_pid.wall_stake_pid(wall_stake, wall_stake_rotation_sensor, -20);
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
     //     this->loading_lb = false;
     // }
 }

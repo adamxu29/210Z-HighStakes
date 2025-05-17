@@ -10,15 +10,9 @@ namespace Eclipse
             double tpr = 0;
             double tpi = 0;
 
-<<<<<<< HEAD
-            int red_max = 15; //10
-            int red_min = 0;
-            int blue_max = 225;
-=======
             int red_max = 16;
             int red_min = 10;
             int blue_max = 215;
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
             int blue_min = 210;
             int sort_delay = 105;
             

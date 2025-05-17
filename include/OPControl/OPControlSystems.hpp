@@ -20,11 +20,7 @@ namespace Eclipse{
 
             bool wall_stake_on = true;
             static const int num_states = 4;
-<<<<<<< HEAD
-            double states[num_states] = {6, -21.7, -46, -143}; 
-=======
             double states[num_states] = {6, -19.4, -55, -143}; 
->>>>>>> 3eea8f8 (post worlds - removed teir 2)
             int current_state = 0;
             double target = states[current_state];
 

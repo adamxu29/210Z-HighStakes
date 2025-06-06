@@ -13,7 +13,7 @@ pros::Motor intake(14);
 
 pros::Motor_Group wall_stake({10, -1});
 
-pros::Rotation horizontal_rotation_sensor(6);
+pros::Rotation horizontal_rotation_sensor(16);
 pros::Rotation wall_stake_rotation_sensor(2);
 
 pros::Optical color(8);

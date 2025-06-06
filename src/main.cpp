@@ -23,7 +23,7 @@ void initialize() {
 	util.set_drive_constants(3.25, 0.75, 600);
 	util.set_tpi();
 
-	odom.set_horizontal_tracker_specs(2.75, -2.89);
+	odom.set_horizontal_tracker_specs(2, 0);
 	odom.set_vertical_tracker_specs(3.25, -6.56);
 
 	imu1.tare_rotation();

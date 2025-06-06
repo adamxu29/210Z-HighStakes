@@ -50,10 +50,6 @@ void Eclipse::Drive::turn_to_point(double x, double y, double time_out){
         double current_position = util.get_heading();
         double theta = util.get_min_angle(util.get_angular_error(x, y, false)) * 180 / M_PI;
         
-        char buffer[300];
-        sprintf(buffer, "Theta: %.2f", theta);
-        lv_label_set_text(gui.debug_line_1, buffer);
-
         double voltage = r_pid.compute_r(current_position, theta);
 
         left_drive.move_voltage(voltage * (12000.0 / 127.0));
@@ -90,39 +86,85 @@ void Eclipse::Drive::turn_to_point(double x, double y, double time_out){
             break;
         }
         pros::delay(10);
-        // this->r_error = util.get_angular_error(x, y, true) * 180 / M_PI;
-        // this->r_derivative = this->r_error - this->r_prev_error;
-
-        // double r_voltage = (this->r_error * this->r_kp) + (this->r_derivative * this->r_kd);
-        // if (r_voltage * (12000.0 / 127) > this->max_rotation_speed * (12000.0 / 127)){ r_voltage = this->max_rotation_speed; }
-        // else if (r_voltage * (12000.0 / 127) < -this->max_rotation_speed * (12000.0 / 127)){ r_voltage = -this->max_rotation_speed; }
-        
-        // left_drive.move_voltage(r_voltage * (12000.0 / 127));
-        // right_drive.move_voltage(-r_voltage * (12000.0 / 127));
-
-        // local_counter++;
-
-        // if(fabs(this->r_error) < this->r_error_threshold){
-        //     left_drive.move_voltage(0);
-        //     right_drive.move_voltage(0);
-            // this->r_counter++;
-        // }
-        // else{
-            // this->r_counter = 0;
-        // }
-
-        // if(this->r_counter >= this->r_tolerance){
-        //     left_drive.move_voltage(0);
-        //     right_drive.move_voltage(0);
-        //     break;
-        // }
-        pros::delay(10);
     }
-    
-    
-    
 }
 
 void Eclipse::Drive::move_to_point(double x, double y, bool turn_first, bool backwards, double time_out){
-    
+    this->reset_variables();
+    double local_timer = 0;
+
+    while(true){
+        odom.update_position();
+        r_error = backwards ? util.get_min_angle(util.get_angular_error(-x, -y, false)) * 180 / M_PI : util.get_min_angle(util.get_angular_error(x, y, false)) * 180 / M_PI;
+        t_error = backwards ? -util.get_lateral_error(x, y) : util.get_lateral_error(x, y);
+
+        if(fabs(t_error) < 5){
+            t_counter++;
+        } else {
+            t_counter = 0;
+        }
+        
+        r_derivative = r_error - r_prev_error;
+        t_derivative = t_error - t_prev_error;
+
+        if(r_ki != 0){ r_integral += r_error; }
+        if(t_ki != 0){ t_integral += t_error; }
+
+        if(util.sign(r_error) != util.sign(r_prev_error)){ r_integral = 0; }
+        if(util.sign(t_error) != util.sign(t_prev_error)){ t_integral = 0; }
+
+        double r_power = (r_error * r_kp) + (r_integral * r_ki) + (r_derivative * r_kd);
+        double t_power = (t_error * t_kp) + (t_integral * t_ki) + (t_derivative * t_kd);
+
+        double adjustment_factor = r_error * (M_PI / 180.0);
+        t_power *= std::cos(adjustment_factor);
+
+        if((t_power * (12000.0 / 127)) > max_translation_speed * (12000.0 / 127)){
+            t_power = max_translation_speed;
+        }
+        if((t_power * (12000.0 / 127)) < -max_translation_speed * (12000.0 / 127)){
+            t_power = -max_translation_speed;
+        }
+        if((r_power * (12000.0 / 127)) > max_rotation_speed * (12000.0 / 127)){
+            r_power = max_rotation_speed;
+        }
+        if((r_power * (12000.0 / 127)) < -max_rotation_speed * (12000.0 / 127)){
+            r_power = -max_rotation_speed;
+        }
+
+        if(local_timer < 20 && turn_first){
+            t_power = 0;
+        }
+
+        double left_voltage = t_power - r_power;
+        double right_voltage = t_power + r_power;
+        left_drive.move_voltage(left_voltage * (12000.0 / 127.0));
+        right_drive.move_voltage(right_voltage * (12000.0 / 127.0));
+
+        if(fabs(t_error) < t_error_threshold){
+            t_counter++;
+        } else {
+            t_counter = 0;
+        }
+
+        if(t_counter >= t_tolerance){
+            r_power = 0;
+            left_drive.move_voltage(0);
+            right_drive.move_voltage(0);
+            local_timer = 0;
+            break;
+        }
+
+        if(local_timer > time_out * 100){
+            left_drive.move_voltage(0);
+            right_drive.move_voltage(0);
+            local_timer = 0;
+            break;
+        }
+
+        r_prev_error = r_error;
+        t_prev_error = t_error;
+
+        pros::delay(10);
+    }
 }

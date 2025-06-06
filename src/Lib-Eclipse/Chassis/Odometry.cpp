@@ -37,7 +37,7 @@ double prev_horizontal_displacement = 0;
 double prev_vertical_displacement = 0;
 double prev_heading = 0;
 
-// Pilons odom implementation
+// Pilons odom implementation: https://thepilons.ca/wp-content/uploads/2018/10/Tracking.pdf
 void Odom::update_position(){
     double horizontal_pos = get_horizontal_displacement();
     double vertical_pos = get_right_displacement();

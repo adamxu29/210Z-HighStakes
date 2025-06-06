@@ -33,6 +33,7 @@ namespace Eclipse
             void set_drive_constants(const double dt_wheel_diameter, const double dt_gear_ratio, const double dt_motor_cartridge);
             
             double get_angular_error(double x, double y, bool robot_relative);
+            double get_lateral_error(double x, double y);
             // sensors
             double get_position();
             void reset_position();

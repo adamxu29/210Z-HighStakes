@@ -96,6 +96,14 @@ double Utility::get_angular_error(double x, double y, bool robot_relative)
     return M_PI_2 - delta_theta; // convert to standard angle
 }
 
+double Utility::get_lateral_error(double x, double y)
+{
+    double delta_x = x - util.get_robot_x();
+    double delta_y = y - util.get_robot_y();
+
+    return sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+}
+
 double Utility::get_position()
 {
     // use motors that disconnect the least
